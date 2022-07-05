@@ -1,24 +1,24 @@
-class Add1:
-    # def __init__(self, num1):
-    #     print("In 0")
-    #     self.num1 = num1    
-    def __call__(self, num):
-        print("In 1")
-        self.sum = self.sum + num
-        Add(self.sum).__call__(num)
+class NextCall:
+    __num = 0
     
-class Add(Add1):
-    def __init__(self, sum):
-        print("In 2")
-        self.sum = sum
-    
-    def __add__(self,sum):
-        return self+sum
+    def get_a(self):
+        return self.__num
+    def set_a(self, value):
+        NextCall.__num = value
         
-    def __call__(self, sum):
-        print("In 4")
-        print(self.sum)
-        super().__call__(sum)
+    def __call__(self):
+        return self.__call__(NextCall.__num)
+
+    
+class Add(NextCall):
+    def __init__(self, num1):
+        self.num1 = num1
+        NextCall.__num = num1
+        
+    def __call__(self, num2):
+        NextCall.__num += num2
+        print(NextCall.__num)
+        NextCall.__call__(self)
         
     
 print(Add(2)(4)(10))
