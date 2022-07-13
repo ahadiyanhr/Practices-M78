@@ -21,7 +21,7 @@ class Matrix:
            
     def create(self) -> list:
         '''
-        This function generates the n*m null-matrix.
+        This method generates the n*m null-matrix.
         '''
         for _ in range(self._n):
             column = []
@@ -30,9 +30,18 @@ class Matrix:
             self._matrix.append(column)
         return self._matrix
     
+    def assign_matrix(self, matrix: list):
+        '''
+        This method get a matrix as a list and assign it to instance.
+        '''
+        if Matrix.euqal_dim(self, matrix):
+            self._matrix = matrix
+            return self._matrix
+        return f"Matices have not the same dimentions"
+    
     def __len__(self) -> int:
         '''
-        This function return the multiple of row*column of matrix.
+        This method return the multiple of row*column of matrix.
         But if you use len(my_matrix), it prints the dimention of my_matrix.
         '''
         print(f"{self._n}*{self._m}")
@@ -40,7 +49,7 @@ class Matrix:
     
     def __abs__(self) -> list:
         '''
-        A function that gets a matrix and returns it with positive elements.
+        A method that gets a matrix and returns it with positive elements.
         '''
         abs_matrix = self._matrix
         for i in range(self._n):
@@ -52,7 +61,7 @@ class Matrix:
     @staticmethod
     def euqal_dim(matrix1: object, matrix2: object):
         '''
-        This function evaluate the matrices have the same dimensions or not.
+        This method evaluate the matrices have the same dimensions or not.
         '''
         if isinstance(matrix1, Matrix) and isinstance(matrix2, Matrix):
             if (len(matrix1._matrix[1]) == len(matrix2._matrix[1])) and (len(matrix1._matrix) == len(matrix2._matrix)):
@@ -62,7 +71,7 @@ class Matrix:
     
     def elements_operator(self, matrix, operator):
         '''
-        This function loops on self & matrix element by element and apply an operator on them.
+        This method loops on self & matrix element by element and apply an operator on them.
         '''
         if isinstance(matrix, Matrix):
             if Matrix.euqal_dim(self, matrix): # check the two matrices have identical dimension by staticmethod
@@ -76,7 +85,7 @@ class Matrix:
     
     def elements_comparison(self, matrix, operator):
         '''
-        This function loops on self & matrix element by element and compares them.
+        This method loops on self & matrix element by element and compares them.
         '''
         if isinstance(matrix, Matrix):
             if Matrix.euqal_dim(self, matrix): # check the two matrices have identical dimension by staticmethod
@@ -149,7 +158,7 @@ class Square(Matrix):
     
     def get_diagonal(self) -> list:
         '''
-        A function that calcualtes main diagonal of matrix and returns it as list.
+        A method that calcualtes main diagonal of matrix and returns it as list.
         '''
         matrice = []
         for i in range(self._n):
@@ -158,7 +167,7 @@ class Square(Matrix):
     
     def get_2nd_diagonal(self) -> list:
         '''
-        A function that calcualtes secondary diagonal of matrix and returns it as list.
+        A method that calcualtes secondary diagonal of matrix and returns it as list.
         '''
         matrice = []
         j = self._n
@@ -167,34 +176,48 @@ class Square(Matrix):
                 matrice.append(self._matrix[i][j])
         return matrice
     
+    def __push_elements(self) -> list:
+        '''
+        This private method push first column in Square matrix to the end.
+        '''
+        push_matrix = self._matrix
+        for row in range(self._n):
+            pops = self._matrix[row].pop(0)
+            push_matrix[row].extend([pops])
+        return push_matrix
+    
+    @staticmethod
+    def __multiple_rows(lists: list) -> int:
+        '''
+        This private method return the summation of multiples of a list's items.
+        '''
+        mult = 1
+        for items in lists:
+            mult = mult*items
+        return mult
+        
+    
+    
     def determinant(self) -> int:
         '''
-        A function that calcualtes determinant of matrix and returns it as integer.
+        A method that calcualtes determinant of matrix and returns it as integer.
         '''
-        adds = 0
-        item = list(range(self._n))
-        i = j = 0
+        determinants = 0
+        matrice = self
         for _ in range(self._n):
-                adds += self._matrix[item[i]][item[i]]
-        return matrice
+            # main diagonal - secondary diagonal:
+            determinants += Square._Square__multiple_rows(matrice.get_diagonal())-Square._Square__multiple_rows(matrice.get_2nd_diagonal())
+            matrice.__push_elements() # for push the first column of matrix to the end column
+        return determinants
 
 
-# mat1 = Matrix(3,4)
-# mat2 = Matrix(3,4)
+
 mat3 = Square(3)
-# mat4 = Square(3)
+list1 = [[2, -3, 1], [2, 0, -1], [1, 4, 5]]
+mat3.assign_matrix(list1)
+print(mat3._matrix)
 
-# mat1._matrix[1][1] = 2
-# mat2._matrix[1][1] = 4
-
-mat3._matrix[1][1] = 2
-mat3._matrix[0][2] = 4
-# # mat4._matrix[1][1] = 2
-# # print(mat3._matrix)
-# # print(mat3._matrix[2][2])
-# mat3.get_diagonal()
-print(mat3.get_diagonal())
-print(mat3.get_2nd_diagonal())
+print(mat3.determinant())
 
 
 # print(mat3._matrix)
