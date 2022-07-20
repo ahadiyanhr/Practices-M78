@@ -1,0 +1,4 @@
+2022-07-20 15:55:44,932 — root       — INFO             — 932 — a/b=0.6666666666666666
+2022-07-20 15:55:44,934 — root       — ERROR            — 934 — Divide by zero!
+2022-07-20 15:55:44,935 — root       — INFO             — 935 — Person created! ali alavi
+2022-07-20 15:55:44,936 — root       — ERROR            — 936 — Invalid age!
