@@ -1,15 +1,13 @@
 import logging
 
+log_file_format = logging.Formatter("%(asctime)s — %(name)-10s — %(levelname)-16s — %(message)s")
 
-logging.basicConfig()
-log_file_format = "%(asctime)s — %(name)-10s — %(levelname)-16s — %(funcName)s:%(lineno)d — %(message)s"
-
-logging.basicConfig()
+logging.basicConfig(level = logging.DEBUG)
+logger = logging.getLogger('root')
 file_handler = logging.FileHandler('person.log', 'a')
-log_format = logging.Formatter("%(asctime)s — %(name)s — %(levelname)s — %(message)s")
 file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(logging.Formatter(log_file_format))
-
+file_handler.setFormatter(log_file_format)
+logger.addHandler(file_handler)
 
 class Person():
     def __init__(self, name, family, age):
