@@ -2,7 +2,7 @@ import logging
 
 
 logging.basicConfig()
-log_file_format = "%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s"
+log_file_format = "%(asctime)s — %(name)-10s — %(levelname)-16s — %(funcName)s:%(lineno)d — %(message)s"
 
 logging.basicConfig()
 file_handler = logging.FileHandler('person.log', 'a')

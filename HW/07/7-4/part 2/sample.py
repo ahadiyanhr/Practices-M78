@@ -1,8 +1,8 @@
-from person1 import Person
+from person import Person
 import logging
 
 
-log_file_format = "%(asctime)s — %(name)s — %(levelname)s — %(funcName)s:%(lineno)d — %(message)s"
+log_file_format = "%(asctime)s — %(name)-10s — %(levelname)-16s — %(funcName)s:%(lineno)d — %(message)s"
 log_console_format = "%(asctime)s — %(levelname)s — %(message)s"
 
 logging.basicConfig()
