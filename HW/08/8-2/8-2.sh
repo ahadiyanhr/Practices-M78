@@ -7,14 +7,21 @@ var=$(find . -type f -name "*.mp3" -printf "%f\n" | shuf -n 1)
 
 
 if [ "$var" ]; then
-	echo -e "Rates: 0\nAverage: 0" > "$var.txt"
+	echo -e "Rates:\n0\nAverage:\n0" > "$var.txt"
 	echo "VLC is playing $var NOW!"
 	cvlc --play-and-exit "$var"
 	
 	while :; do
 		read -p "Enter your RATE (1/10): " rate
 		if (($rate >= 1 && $rate <= 10)); then
-			echo $rate > "$var.txt"
+			# lines=$(cat "$var.txt" | wc -l)
+			ave=$(cat "$var.txt" | tail -1)
+			rates=$(cat "$var.txt" | head -n -2)
+			echo "$rates" >> "$var.txt"
+			echo -e "\n$rate" > "$var.txt"
+			echo "Average:" > "$var.txt"
+			
+			echo
 			break
 		else
 			read -p "Your Rate is not in Range."
