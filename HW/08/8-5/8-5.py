@@ -1,35 +1,41 @@
-from ast import Continue
-from decimal import DivisionByZero
-from operator import contains
+'''
+I mention 7 notes in below to have better and clear code as below!
+'''
+
+# from ast import Continue --> *1* This class does not need because we use "continue-keyword" in our loop
+# from decimal import DivisionByZero --> *2* This module does not need because the right error for divide by zero is "ZeroDivisionError"
+# from operator import contains --> *3* This module is not required
 import pickle
 
-def calculate_divides(file_path: str) -> list[float | None]:
+def calculate_divides(file_path: str) -> list:
     '''Unpickled File & Returned Result Divide Numbers'''
     
     file = open(file_path,"rb")
     numbers = pickle.load(file)
     result = []
     
-    while True:
+    # *4* We add for-loop before to catch item of numbers list
+    # in order to handle each item(tuple) of list easily
+    for item in numbers:
         try:
-            
-            # I add int() before each item of tuple in order to
-            # remove TypeError except statement completely
-            # and handle this kind of error automatically
-            result = list(map(lambda t: int(t[0]) / int(t[1]), numbers[:2]))
-        # TypeError does not need to handle :)
-        # except TypeError:
-        #    result = [None for _ in numbers]
+            result.append(item[0]/item[1])
+        
+        # *5* TypeError handle by convert str to int:
+        except TypeError:
+            print(f"There is a string item in loop {len(result)+1} which convert to integer!")
+            result.append(int(item[0])/int(item[1]))
+            continue
 
-        # Additionally, I add ZeroDivisionError to check if the denominator is zero.
-        # If this error occured, the item remove from list of tuple.
+        # *6* Additionally, I add ZeroDivisionError to check if the denominator is zero.
+        # If this error occured, the item does not append to list:
         except ZeroDivisionError:
+            print(f"There is a divide by zero in loop {len(result)+1} that ignored by code!")
             continue
         
+        # *7* Moreover, I add finally-statement to force the file close at the end of program.
         finally:
-            print(result)
-    # file.close()
-    # return result
+            file.close()
+    return result
 
 
-calculate_divides('numbers.pickle')
+print(calculate_divides('numbers.pickle'))
