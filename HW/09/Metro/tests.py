@@ -28,4 +28,18 @@ class MetroCard(unittest.TestCase):
     pass
     # a card must belong to a user and his/her bank account
     # charge a card with bank account
+    # show error if card has not enough credit
+
+class TestTrip(unittest.TestCase):
+    pass
+    # 
+
+class TestMain(unittest.TestCase):
+    pass
+    # 1. user register ==> pickle it, show Authentication id
+    # 2. bank account management ==> with Authentication id
+    # 3. record a trip to a dict (key: trip_number, value: info): get A_id, select MetroCard (ask about charge it?), Pay for ticket and record it
+    # 4. Management: get Admin_id and password, go to admin control:
+    #   record a metro trip
+    #   edit a trip that has already been made 
     
