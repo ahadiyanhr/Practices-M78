@@ -29,10 +29,14 @@ class MetroCard(unittest.TestCase):
     # a card must belong to a user and his/her bank account
     # charge a card with bank account
     # show error if card has not enough credit
+    # single-credit-limited
+    # save in cards.pickle and its owner
 
 class TestTrip(unittest.TestCase):
     pass
-    # 
+
+    # create trip (origin, destination, Fare)
+    # each trip can do by one until end
 
 class TestMain(unittest.TestCase):
     pass
