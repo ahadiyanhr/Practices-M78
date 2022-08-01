@@ -1,8 +1,16 @@
+from User import User
 import unittest
 
 class TestUser(unittest.TestCase):
-    pass
-    # user creation
+    
+    def test_user_creation(self):
+        print("sd13535f")
+        test_user = User("Hamid", "Rezaei", "myPass123", '09122224444')
+        self.assertEqual(test_user.first_name, "Hamid")
+        self.assertEqual(test_user.last_name, "Rezaei")
+        self.assertEqual(test_user.password, "myPass123")
+        self.assertEqual(test_user.phone_number, "09122224444")
+    
     # store user info in users.pickle
     # create a user only by program interface
     # must have a private_unique_id that produce by program and show it when a user create
