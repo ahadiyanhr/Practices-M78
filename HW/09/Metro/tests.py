@@ -4,7 +4,6 @@ import unittest
 class TestUser(unittest.TestCase):
     
     def test_user_creation(self):
-        print("sd13535f")
         test_user = User("Hamid", "Rezaei", "myPass123", '09122224444')
         self.assertEqual(test_user.first_name, "Hamid")
         self.assertEqual(test_user.last_name, "Rezaei")
@@ -55,3 +54,7 @@ class TestMain(unittest.TestCase):
     #   record a metro trip
     #   edit a trip that has already been made 
     
+
+
+if __name__ == '__main__':
+    unittest.main()

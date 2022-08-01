@@ -27,15 +27,15 @@ class User:
         
     @property
     def phone_number(self):
-        return self.phone_number
+        return self._phone_number
     
     @phone_number.setter
     def phone_number(self, phone_number: str):
         if len(phone_number) != 11:
             raise ex.PhoneError("Phone Number must be 11 character.")    
-        elif phone_number[:1] != '09':
+        elif phone_number[:2] != '09':
             raise ex.PhoneError("Phone Number must start with \"09\"")
-        self.phone_number = phone_number
+        self._phone_number = phone_number
 
 if __name__ == "__main__":
     
