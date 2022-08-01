@@ -1,16 +1,26 @@
 from User import User
+import exceptions as ex
 import unittest
 
 class TestUser(unittest.TestCase):
     
-    def test_user_creation(self):
-        test_user = User("Hamid", "Rezaei", "myPass123", '09122224444')
+    def test_creation(self):
+        test_user = User("Hamid", "Rezaei", "myPass123", "09122224444")
         self.assertEqual(test_user.first_name, "Hamid")
         self.assertEqual(test_user.last_name, "Rezaei")
         self.assertEqual(test_user.password, "myPass123")
         self.assertEqual(test_user.phone_number, "09122224444")
     
-    # store user info in users.pickle
+    def test_password(self):
+        self.assertRaises(ex.PasswordError, User, "Hamid", "Rezaei", "123")
+    
+    def test_phone_number(self):
+        self.assertRaises(ex.PhoneError, User, "Hamid", "Rezaei", "myPass123", "56122224444")
+    
+    def test_pickling(self):
+        # store user info in users.pickle
+        pass
+    
     # create a user only by program interface
     # must have a private_unique_id that produce by program and show it when a user create
     # ... works as Authentication id to have a trip or use bank account

@@ -3,17 +3,21 @@ import uuid
 
 class User:
     users = {} 
+    def __new__(cls, *args):
+        
+        raise ex.InstantiateError("This class can not create an instance directly.")
     
     def __init__(self, first_name: str, last_name: str, password: str, phone_number: str = None):
+        
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
         self.phone_number = phone_number
         # make a UUID using an MD5 hash of a namespace UUID and username:
-        self.id = str(uuid.uuid3(uuid.NAMESPACE_DNS, 'saf')).split("-")[0]
+        self.auth_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, 'saf')).split("-")[0]
     
     def __repr__(self):
-        return f"-----------\nFirstname: {self.first_name}\nFirstname: {self.last_name}\nUserID: {self.id}\nPhone Number: {self.phone_number}\n-----------"
+        return f"-----------\nFirstname: {self.first_name}\nFirstname: {self.last_name}\nUserID: {self.auth_id}\nPhone Number: {self.phone_number}\n-----------"
     
     @property
     def password(self):
@@ -37,20 +41,18 @@ class User:
             raise ex.PhoneError("Phone Number must start with \"09\"")
         self._phone_number = phone_number
 
+
+    
+    @classmethod
+    def instantiate(cls, first_name, last_name, password, phone_number = None):
+        '''
+        This method create an instance a new User
+        '''       
+        new_instance = User.__init__(User, first_name, last_name, password, phone_number)
+        return new_instance
+    
 if __name__ == "__main__":
     
-    @staticmethod
-    def sign_up(username: str, password: str, phone_number: str = None) -> str:
-        '''
-        This method sign up a new User
-        '''       
-        registered_user = User(username, phone_number)
-        registered_user.password = password
-        User.users[registered_user.id] = (registered_user)
-        print(f"{registered_user.username} is signed up.\n")
-        return registered_user
-    
-
     @staticmethod
     def user_valid(username:str , password) -> str or True or False:
         '''

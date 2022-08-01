@@ -3,3 +3,6 @@ class PasswordError(ValueError):
 
 class PhoneError(ValueError):
     pass
+
+class InstantiateError(UserWarning):
+    pass
