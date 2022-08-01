@@ -3,8 +3,11 @@ import uuid
 
 class User:
     users = {} 
-    def __new__(cls, *args):
-        
+    
+    def __new__(cls, flag, *args):
+        if flag == 1:
+            self = super().__new__(cls)
+            return self
         raise ex.InstantiateError("This class can not create an instance directly.")
     
     def __init__(self, first_name: str, last_name: str, password: str, phone_number: str = None):
@@ -48,6 +51,7 @@ class User:
         '''
         This method create an instance a new User
         '''       
+        new_instance = User.__new__(User, 1, first_name, last_name, password, phone_number)
         new_instance = User.__init__(User, first_name, last_name, password, phone_number)
         return new_instance
     
