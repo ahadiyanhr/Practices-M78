@@ -33,7 +33,7 @@ class User:
         logging.log(logging.INFO, f"The user created with Auth_ID of {self.auth_code} and pickled to users.pickle file.")
             
         
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         return f"Authentication ID: {self.auth_code}"
     
     @property

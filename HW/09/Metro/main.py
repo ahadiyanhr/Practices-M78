@@ -1,5 +1,6 @@
 from User import User
-from admin import Admin
+from Admin import Admin
+from BankAccount import BankAccount
 
 #User:
     # create a user only by program interface???
@@ -11,7 +12,11 @@ from admin import Admin
     # must have a private_unique_id that produce by program and show it when a user create
     # ... works as Authentication id to have a trip or use bank account
 
-test_admin = Admin("Saeed", "Rezaei", "0155554781", "myPass123", "09122224444")
+test_admin = User("Saeed", "Rezaei", "0155554781", "myPass123", "09122224444")
+bank1 = BankAccount(test_admin, 1000000)
+# bank2 = BankAccount(test_admin, 1000000)
+
+print(BankAccount.owner_accounts)
 
 
 if __name__ == "__main1__":

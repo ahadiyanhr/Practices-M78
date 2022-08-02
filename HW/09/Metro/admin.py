@@ -5,6 +5,11 @@ import uuid
 
 from User import User
 
+# Logging Setup:
+log_format = "%(asctime)s %(name)s %(levelname)s: %(message)s"
+logging.basicConfig(filename= 'metro.log', filemode= 'a',\
+    level= logging.DEBUG, format= log_format)
+
 class Admin(User):
     admins = []
     
@@ -12,7 +17,7 @@ class Admin(User):
         for admin in Admin.admins:
             # Check the user with National ID Number already exists or not:
             if args[2] == admin.id_number:
-                logging.log(logging.INFO, "This admin was already registered and can not created.")
+                logging.log(logging.ERROR, "This admin was already registered and can not created.")
                 raise ex.InstantiateError("This admin was already registered.")
         return super(Admin, cls).__new__(cls, *args)
     

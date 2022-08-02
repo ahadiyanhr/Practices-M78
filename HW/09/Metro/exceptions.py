@@ -9,3 +9,12 @@ class PhoneError(ValueError):
 
 class InstantiateError(UserWarning):
     pass
+
+class AccountBalanceError(ValueError):
+    pass
+
+class OwnerInstanceError(TypeError):
+    pass
+
+class AuthenticationCodeError(ValueError):
+    pass
