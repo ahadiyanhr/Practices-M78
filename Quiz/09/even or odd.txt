@@ -1,0 +1,11 @@
+for even:
+
+SELECT numbers
+FROM table
+WHERE (numbers%2 = 0);
+------------------
+for odd:
+
+SELECT numbers
+FROM table
+WHERE (numbers%2 != 0);
