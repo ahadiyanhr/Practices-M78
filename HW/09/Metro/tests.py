@@ -1,38 +1,60 @@
+from types import NoneType
 from User import User
+from admin import Admin
 import exceptions as ex
 import unittest
 
 class TestUser(unittest.TestCase):
     
     def test_creation(self):
-        test_user = User("Hamid", "Rezaei", "myPass123", "09122224444")
+        User("Hamid", "Rezaei", "0123456789", "myPass123", "09122224444")
+        self.assertRaises(ex.InstantiateError, User, "Hamid", "Rezaei", "0123456789", "myPass123")
+    
+    def test_instantiation(self):
+        test_user = User("Hamid", "Rezaei", "0123456799", "myPass123", "09122224444")
         self.assertEqual(test_user.first_name, "Hamid")
         self.assertEqual(test_user.last_name, "Rezaei")
+        self.assertEqual(test_user.id_number, "0123456799")
         self.assertEqual(test_user.password, "myPass123")
         self.assertEqual(test_user.phone_number, "09122224444")
     
+    def test_id_number(self):
+        self.assertRaises(ex.IDNumberError, User, "Hamid", "Rezaei", "0123456", "123")
+    
     def test_password(self):
-        self.assertRaises(ex.PasswordError, User, "Hamid", "Rezaei", "123")
+        self.assertRaises(ex.PasswordError, User, "Hamid", "Rezaei", "0123256781", "pas")
     
     def test_phone_number(self):
-        self.assertRaises(ex.PhoneError, User, "Hamid", "Rezaei", "myPass123", "56122224444")
-    
-    def test_pickling(self):
-        # store user info in users.pickle
-        pass
-    
-    # create a user only by program interface
-    # must have a private_unique_id that produce by program and show it when a user create
-    # ... works as Authentication id to have a trip or use bank account
+        # Must start with "09":
+        self.assertRaises(ex.PhoneError, User, "Hamid", "Rezaei", "0123456581", "myPass123", "56122224444")
+        # Must be 1 chars:
+        self.assertRaises(ex.PhoneError, User, "Hamid", "Rezaei", "0123456581", "myPass123", "56122")
+
     
 class TestAdmin(unittest.TestCase):
-    pass
-    # a subclass of user for create admins
-    # store admin info in admins.pickle
-    # only admins can control the program
-    # must have a private_unique_id that produce by program and show it when a user create
-    # ... works as Authentication id to have a trip or use bank account
+    def test_creation(self):
+        Admin("Saeed", "Rezaei", "0123456781", "myPass123", "09122224444")
+        self.assertRaises(ex.InstantiateError, Admin, "Hamid", "Rezaei", "0123456781", "myPass123")
     
+    def test_instantiation(self):
+        test_admin = Admin("Saeed", "Rezaei", "0123654781", "myPass123", "09122224444")
+        self.assertEqual(test_admin.first_name, "Saeed")
+        self.assertEqual(test_admin.last_name, "Rezaei")
+        self.assertEqual(test_admin.id_number, "0123654781")
+        self.assertEqual(test_admin.password, "myPass123")
+        self.assertEqual(test_admin.phone_number, "09122224444")
+    
+    def test_id_number(self):
+        self.assertRaises(ex.IDNumberError, Admin, "Saeed", "Rezaei", "0123256", "123")
+    
+    def test_password(self):
+        self.assertRaises(ex.PasswordError, Admin, "Saeed", "Rezaei", "3213256781", "pas")
+    
+    def test_phone_number(self):
+        # Must start with "09":
+        self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122224444")
+        # Must be 1 chars:
+        self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122")   
 
 class TestBankAccount(unittest.TestCase):
     pass

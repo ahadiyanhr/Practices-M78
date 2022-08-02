@@ -1,27 +1,52 @@
+import logging
+import pickle
+from types import NoneType
 import exceptions as ex
 import uuid
 
+# Logging Setup:
+log_format = "%(asctime)s %(name)s %(levelname)s: %(message)s"
+logging.basicConfig(filename= 'metro.log', filemode= 'a',\
+    level= logging.DEBUG, format= log_format)
+
 class User:
-    users = {} 
+    users = []
     
-    def __new__(cls, flag, *args):
-        if flag == 1:
-            self = super().__new__(cls)
-            return self
-        raise ex.InstantiateError("This class can not create an instance directly.")
+    def __new__(cls, *args):
+        for user in User.users:
+            # Check the user with National ID Number already exists or not:
+            if args[2] == user.id_number:
+                logging.log(logging.INFO, "This user was already registered and can not created.")
+                raise ex.InstantiateError("This user was already registered.")
+        return super(User, cls).__new__(cls)
     
-    def __init__(self, first_name: str, last_name: str, password: str, phone_number: str = None):
-        
+    def __init__(self, first_name: str, last_name: str, id_number: str, password: str, phone_number: str = None):
         self.first_name = first_name
         self.last_name = last_name
+        self.id_number = id_number
         self.password = password
         self.phone_number = phone_number
-        # make a UUID using an MD5 hash of a namespace UUID and username:
-        self.auth_id = str(uuid.uuid3(uuid.NAMESPACE_DNS, 'saf')).split("-")[0]
+        self.auth_code = str(uuid.uuid3(uuid.NAMESPACE_DNS, self.id_number)).split("-")[0] # make an Auth.Code
+        User.users.append(self) # add to users list
+        with open('users.pickle', 'wb') as up:
+            pickle.dump(User.users, up)
+        logging.log(logging.INFO, f"The user created with Auth_ID of {self.auth_code} and pickled to users.pickle file.")
+            
+        
+    def __repr__(self) -> str:
+        return f"Authentication ID: {self.auth_code}"
     
-    def __repr__(self):
-        return f"-----------\nFirstname: {self.first_name}\nFirstname: {self.last_name}\nUserID: {self.auth_id}\nPhone Number: {self.phone_number}\n-----------"
+    @property
+    def id_number(self):
+        return self.__id_number
     
+    @id_number.setter
+    def id_number(self, id_number: str):
+        if len(id_number) != 10:
+            logging.log(logging.ERROR, f"The National ID Number was not equal to 10 characters.")
+            raise ex.IDNumberError("The National ID Number must equal to 10 characters.")    
+        self.__id_number = id_number
+      
     @property
     def password(self):
         return self.__password
@@ -29,7 +54,8 @@ class User:
     @password.setter
     def password(self, password: str):
         if len(password) < 4:
-            raise ex.PasswordError("The password must be at least 4 character.")    
+            logging.log(logging.ERROR, f"The password was not more than 3 characters.")
+            raise ex.PasswordError("The password must be at least 4 characters.")    
         self.__password = password
         
     @property
@@ -38,22 +64,15 @@ class User:
     
     @phone_number.setter
     def phone_number(self, phone_number: str):
-        if len(phone_number) != 11:
-            raise ex.PhoneError("Phone Number must be 11 character.")    
-        elif phone_number[:2] != '09':
-            raise ex.PhoneError("Phone Number must start with \"09\"")
+        if not isinstance(phone_number, NoneType):
+            if len(phone_number) != 11:
+                logging.log(logging.ERROR, f"Phone Number was not equal to 11 characters.")
+                raise ex.PhoneError("Phone Number must be 11 characters.")    
+            elif phone_number[:2] != '09':
+                logging.log(logging.ERROR, f"Phone Number did not start with \"09\".")
+                raise ex.PhoneError("Phone Number must start with \"09\".")
         self._phone_number = phone_number
 
-
-    
-    @classmethod
-    def instantiate(cls, first_name, last_name, password, phone_number = None):
-        '''
-        This method create an instance a new User
-        '''       
-        new_instance = User.__new__(User, 1, first_name, last_name, password, phone_number)
-        new_instance = User.__init__(User, first_name, last_name, password, phone_number)
-        return new_instance
     
 if __name__ == "__main__":
     
@@ -81,97 +100,6 @@ if __name__ == "__main__":
     
 
         
-    loop = True
-    choice = ''
-    print("\n-----------\nHi dear, Welcome to my Program, :)")
-    while loop:
-        choice = input('''\nPlease select your option:
-            Quit -> 0
-            Sign Up -> 1
-            Log in -> 2
-            
-                Enter your choice >> ''')
-        
-        #----- User select "0" from Main Menu:
-        if choice == '0':
-            print("Quit from Menu")
-            break
-        
-        #----- User select "1" from Main Menu:
-        elif choice == '1':
-            print("\n----> Sign Up Menu <----")
-            get_username = input('Enter Your Username: ')
-            get_password = input('Enter Your Password: ')
-            get_phone = input('Do you have Phone Number? y/N ')
-            
-            if get_phone in ['', 'n', 'N']:
-                phone_number = None
-            else:
-                phone_number = input('Enter Your Phone Number: ')
-            
-            User.sign_up(get_username, get_password, phone_number)
-        
-        #----- User select "2" from Main Menu:    
-        elif choice == '2':
-            print("\n----> Log in Menu <----")
-            get_username = input('Enter Your Username: ')
-            get_password = input('Enter Your Password: ')
-            
-            if isinstance(User.user_valid(get_username, get_password),str):
-                print(f"{get_username} signed in successfully!")
-                user_id = User.user_valid(get_username, get_password)
-                menuloop = True
-                
-                while menuloop:
-                    menu = input('''\nPlease select your option:
-        Print User Information -> 1
-        Modify your Information -> 2
-        Change your Password -> 3
-        Exit from User Menu -> 4
-        
-            Enter your choice >> ''')
 
-                    #----- User select "1" from User Menu:
-                    if menu == '1':
-                        print(User.users[user_id])
-                    
-                    #----- User select "2" from User Menu:
-                    elif menu == '2':
-                        get_username = input('Enter Your Username: ')
-                        if User.user_valid(get_username, None):
-                            print(f"This username has been taken by others! Please take another one.")
-                        
-                        get_phone = input('Do you have Phone Number? y/N ')
-                        if get_phone in ['', 'n', 'N']:
-                            phone_number = None
-                        else:
-                            phone_number = input('Enter Your Phone Number: ')
-                        
-                        User.users[user_id].username = get_username
-                        User.users[user_id].phone_number = phone_number
-                        
-                    #----- User select "3" from User Menu:    
-                    elif menu == '3':
-                        old_pass = input("Enter your old Password: ")
-                        new_pass = input("Enter your new Password: ")
-                        repeat_new = input("Repeat your new Password: ")
-                        if (User.users[user_id].password == old_pass) and (User.pass_valid(new_pass, repeat_new)):
-                                User.users[user_id].password = new_pass
-                                print("Password Updated!\nPlese log in again with your new Password.")
-                                menuloop = False
-                        elif User.users[user_id].password == old_pass:
-                            print("New passwords are not match!")
-                        else:
-                            print("Password is wrong!")
-                            
-                    #----- User select "4" from User Menu:    
-                    elif menu == '4':
-                        menuloop = False
-                        
-            elif User.user_valid(get_username, get_password):
-                print("Password is wrong!")
-            else:
-                print("There is not any User!")
-    
         
         

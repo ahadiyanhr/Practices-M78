@@ -1,3 +1,6 @@
+class IDNumberError(ValueError):
+    pass
+
 class PasswordError(ValueError):
     pass
 

@@ -1,13 +1,14 @@
 from math import floor
+from User import User
 
 class BankAccount:
     
-    # minimum balance of bank account consider as a Class Attribute
-    minBalance = 1 #$
+    minBalance = 500000 # minimum balance, IRR
+    fee = 600 # IRR
     
     # account attributes:
-    def __init__(self, ownerName, balance):
-        self.ownerName = ownerName
+    def __init__(self, owner: User, balance):
+        self.owner = owner
         self.balance = balance
     
     # description of class:    
