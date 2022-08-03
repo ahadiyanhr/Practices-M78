@@ -34,7 +34,7 @@ class BankAccount:
     @owner.setter
     def owner(self, owner: User):
         if not isinstance(owner, User):
-            logging.log(logging.ERROR, f"The input owner is not a user.")
+            logging.log(logging.ERROR, "The input owner is not a user.")
             raise ex.OwnerInstanceError("The input owner is not a user.")    
         self._owner = owner
     
@@ -45,7 +45,7 @@ class BankAccount:
     @balance.setter
     def balance(self, balance: int):
         if balance < self.minBalance:
-            logging.log(logging.ERROR, f"Balance of account is less than 500000 IRR.")
+            logging.log(logging.ERROR, "Balance of account is less than 500000 IRR.")
             raise ex.AccountBalanceError("Balance of account must be more than 500000 IRR.")    
         self._balance = balance
     
@@ -56,16 +56,27 @@ class BankAccount:
     def _check_auth_code(self, auth_code: str) -> bool:
         '''Check if Authentication Codes are match or not'''
         if self.owner.auth_code == auth_code:
-            logging.log(logging.INFO, f"The authentication codes are matched.")
+            logging.log(logging.INFO, "The authentication codes are matched.")
             return True
-        logging.log(logging.ERROR, f"The authentication code was invalid.")
+        logging.log(logging.ERROR, "The authentication code was invalid.")
         return False
     
     def _check_balance(self, amount: int) -> bool:
         '''Check if transaction can be done or not'''
-        if self.balance < (self.minBalance + self.fee + amount):   
-            return False
+        if self.balance < (self.minBalance + self.fee + amount):
+            logging.log(logging.INFO, "The transaction can not be done due to not enough balance.")
+            raise ex.NotEnoughBalance("The transaction is not executable due to not enough balance.")
         return True
+    
+    def _check_account(self, account: "BankAccount") -> bool:
+        '''Check if account exists or not'''
+        if isinstance(account, BankAccount):
+            if account in BankAccount.owner_accounts.values():
+                return True
+            logging.log(logging.ERROR, "The bank account is not exist.")
+            raise ex.AccountNotExist("The bank account is not exist.")
+        logging.log(logging.ERROR, "The input object is not a Bank Account.")
+        raise ex.IsNotBankAccount("The input object is not a Bank Account.")
     
     def deposite(self, amount: int, auth_code: str) -> int:
         if self._check_auth_code(auth_code):
@@ -75,39 +86,24 @@ class BankAccount:
         raise ex.AuthenticationCodeError("The authentication code is invalid!")
     
     
-    def withdrawal(self, amount: int, auth_code: str) -> int | str:
+    def withdraw(self, amount: int, auth_code: str) -> int | str:
         
         if self._check_auth_code(auth_code):
             if self._check_balance(amount): # Check the account balance is enough
                 self.balance -= (amount + self.fee)
                 logging.log(logging.INFO, f"Withdrawal Done! The new account balance is {self.balance} IRR.")
                 return self.balance
-            
-            else: # The account balance is less than minimum
-                logging.log(logging.INFO, "Withdrawal can not be done due to not enough balance.")
-                raise ex.NotEnoughBalance("Withdrawal is not executable due to not enough balance.")
         raise ex.AuthenticationCodeError("The authentication code is invalid!")
     
     
     
-    # def transfer(self, account, amount):
-        
-    #     # Check the destination account is exist:
-    #     if not isinstance(account, BankAccount):
-    #         return f'''Transfer failed! There is no any bank account belongs to {account}.'''
-        
-    #     # Check the acount balance is more than minimum
-    #     elif self.balance < BankAccount.minBalance:
-    #         minDeposit = round(BankAccount.minBalance-self.balance, 2)
-    #         return f'''Transfer failed! The account balance is less than the minimum({BankAccount.minBalance}$).''' 
-        
-    #     # Check the acount balance is more than minimum after operation and do it
-    #     elif ((self.balance-amount) >= BankAccount.minBalance):
-    #         self.balance = round(self.balance-amount,2)
-    #         account.balance = round(account.balance+amount,2)
-    #         return f'''Done! {amount}$ was transfered to {account.ownerName}'s account. The new account balance is {self.balance}$'''
-        
-    #     # The acount balance is less than minimum after operation
-    #     else:
-    #         return f'''Transfer is not executable! The account balance will be less than the minimum({BankAccount.minBalance}$) after this operation.'''
+    def transfer(self, account: "BankAccount", amount: int, auth_code: str) -> int | str:
+
+        if self._check_account(account) and self._check_auth_code(auth_code):
+            if self._check_balance(amount): # Check the account balance is enough
+                account.balance += amount
+                self.balance -= amount
+                logging.log(logging.INFO, f"Transfering Done! The new account balance is {self.balance} IRR.")
+                return self.balance
+        raise ex.TransferingError(f"Transfer can not executable!")
             

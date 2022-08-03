@@ -21,3 +21,12 @@ class AuthenticationCodeError(ValueError):
 
 class NotEnoughBalance(ValueError):
     pass
+
+class IsNotBankAccount(TypeError):
+    pass
+
+class AccountNotExist(LookupError):
+    pass
+
+class TransferingError(Exception):
+    pass
