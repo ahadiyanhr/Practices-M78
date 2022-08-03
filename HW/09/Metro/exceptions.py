@@ -28,5 +28,10 @@ class IsNotBankAccount(TypeError):
 class AccountNotExist(LookupError):
     pass
 
+class DepositeError(Exception):
+    pass
+
+class WithdrawError(Exception):
+    pass
 class TransferingError(Exception):
     pass

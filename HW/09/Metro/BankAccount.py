@@ -83,7 +83,8 @@ class BankAccount:
             self.balance += amount
             logging.log(logging.INFO, f'{amount}$ was diposited. The new account balance is {self.balance} IRR')
             return self.balance
-        raise ex.AuthenticationCodeError("The authentication code is invalid!")
+        logging.log(logging.ERROR, "Deposite can not executable!")
+        raise ex.DepositeError("Deposite can not executable!")
     
     
     def withdraw(self, amount: int, auth_code: str) -> int | str:
@@ -93,7 +94,8 @@ class BankAccount:
                 self.balance -= (amount + self.fee)
                 logging.log(logging.INFO, f"Withdrawal Done! The new account balance is {self.balance} IRR.")
                 return self.balance
-        raise ex.AuthenticationCodeError("The authentication code is invalid!")
+        logging.log(logging.ERROR, "Withdraw can not executable!")
+        raise ex.WithdrawError("Withdraw can not executable!")
     
     
     
@@ -105,5 +107,6 @@ class BankAccount:
                 self.balance -= amount
                 logging.log(logging.INFO, f"Transfering Done! The new account balance is {self.balance} IRR.")
                 return self.balance
-        raise ex.TransferingError(f"Transfer can not executable!")
+        logging.log(logging.ERROR, "Transfer can not executable!")
+        raise ex.TransferingError("Transfer can not executable!")
             

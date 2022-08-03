@@ -97,7 +97,7 @@ class TestBankAccount(unittest.TestCase):
         test_account = BankAccount(test_user, 1000000)
         self.assertEqual(test_account.deposite(1000000, test_user.auth_code), 2000000)
         # Check the correct Authentication Code for deposition:
-        with self.assertRaises(ex.AuthenticationCodeError):
+        with self.assertRaises(ex.DepositeError):
             test_account.deposite(10000, 'wrong_authcode')
     
     def test_bankaccount_withdraw(self):
@@ -109,7 +109,7 @@ class TestBankAccount(unittest.TestCase):
         with self.assertRaises(ex.NotEnoughBalance):
             test_account.withdraw(999500, test_user.auth_code)
         # Check the correct Authentication Code for withdrawal:
-        with self.assertRaises(ex.AuthenticationCodeError):
+        with self.assertRaises(ex.WithdrawError):
             test_account.withdraw(10000, 'wrong_authcode')
             
     def test_bankaccount_transfer(self):
