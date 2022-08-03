@@ -266,7 +266,7 @@ class TestSingleCard(unittest.TestCase):
         self.assertEqual(test_account.pay_ticket(test_user.auth_code), True)
         # Check the correct Authentication Code for payticket:
         with self.assertRaises(ex.PayTicketError):
-            test_account.pay_ticket('wrong_authcode')       
+            test_account.pay_ticket('wrong_authcode')
 
 class TestTrip(unittest.TestCase):
     pass
