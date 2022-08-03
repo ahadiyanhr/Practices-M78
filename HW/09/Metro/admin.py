@@ -31,5 +31,5 @@ class Admin(User):
             
         
     def __str__(self) -> str:
-        return f"Authentication ID: {self.auth_code}"
+        return f"Authentication Code: {self.auth_code}"
     

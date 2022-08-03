@@ -60,12 +60,12 @@ class TestAdmin(unittest.TestCase):
 
 class TestBankAccount(unittest.TestCase):
     
-    def test_bankaccount_creation1(self):
+    def test_bankaccount_creation(self):
         test_user = User("Hamid", "Rezaei", "8826656799", "myPass123", "09122224444")
         test_account = BankAccount(test_user, 1000000)
         self.assertRaises(ex.InstantiateError, BankAccount, test_user, 1000000)
     
-    def test_bankaccount_creation(self):
+    def test_bankaccount_instantiation(self):
         test_user = User("Hamid", "Rezaei", "8823456799", "myPass123", "09122224444")
         test_account = BankAccount(test_user, 1000000)
         self.assertEqual(test_account.owner, test_user)
@@ -85,9 +85,15 @@ class TestBankAccount(unittest.TestCase):
         with self.assertRaises(ex.AuthenticationCodeError):
             test_account.deposite(10000, 'wrong_authcode')
     
-    # ask Authentication id for each transaction
-    # withdrawal
-    # deposit
+    def test_bankaccount_withdrawal(self):
+        test_user = User("Hamid", "Rezaei", "8876556719", "myPass123", "09122224444")
+        test_account = BankAccount(test_user, 1000000)
+        self.assertEqual(test_account.withdrawal(1000, test_user.auth_code), 998400)
+        with self.assertRaises(ex.NotEnoughBalance):
+            test_account.withdrawal(999500, test_user.auth_code)
+        with self.assertRaises(ex.AuthenticationCodeError):
+            test_account.withdrawal(10000, 'wrong_authcode')
+
 
 class MetroCard(unittest.TestCase):
     pass

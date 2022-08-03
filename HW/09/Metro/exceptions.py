@@ -18,3 +18,6 @@ class OwnerInstanceError(TypeError):
 
 class AuthenticationCodeError(ValueError):
     pass
+
+class NotEnoughBalance(ValueError):
+    pass

@@ -44,39 +44,49 @@ class BankAccount:
     
     @balance.setter
     def balance(self, balance: int):
-        if balance < BankAccount.minBalance:
+        if balance < self.minBalance:
             logging.log(logging.ERROR, f"Balance of account is less than 500000 IRR.")
             raise ex.AccountBalanceError("Balance of account must be more than 500000 IRR.")    
         self._balance = balance
     
    
     def __str__(self):
-        return f"{self.owner.auth_code} has a bank account with {self.balance}$ balance."
+        return f"{self.owner.auth_code} has a bank account with {self.balance} IRR balance."
     
-    def deposite(self, amount, auth_code):
+    def _check_auth_code(self, auth_code: str) -> bool:
+        '''Check if Authentication Codes are match or not'''
         if self.owner.auth_code == auth_code:
+            logging.log(logging.INFO, f"The authentication codes are matched.")
+            return True
+        logging.log(logging.ERROR, f"The authentication code was invalid.")
+        return False
+    
+    def _check_balance(self, amount: int) -> bool:
+        '''Check if transaction can be done or not'''
+        if self.balance < (self.minBalance + self.fee + amount):   
+            return False
+        return True
+    
+    def deposite(self, amount: int, auth_code: str) -> int:
+        if self._check_auth_code(auth_code):
             self.balance += amount
-            logging.log(logging.INFO, f'{amount}$ was diposited. The new account balance is {self.balance}$')
+            logging.log(logging.INFO, f'{amount}$ was diposited. The new account balance is {self.balance} IRR')
             return self.balance
-        else:
-            logging.log(logging.ERROR, f"The authentication code was invalid.")
-            raise ex.AuthenticationCodeError("The authentication code is invalid!")
+        raise ex.AuthenticationCodeError("The authentication code is invalid!")
+    
+    
+    def withdrawal(self, amount: int, auth_code: str) -> int | str:
         
-    def withdrawal(self, amount, auth_code):
-        
-        # Check the acount balance is more than minimum
-        if self.balance < BankAccount.minBalance:
-            minDeposit = round(BankAccount.minBalance-self.balance, 2)
-            return f'''Withdrawal failed! The account balance is less than the minimum({BankAccount.minBalance}$).''' 
-        
-        # Check the acount balance is more than minimum after operation and do it
-        elif ((self.balance-amount) >= BankAccount.minBalance):
-            self.balance = round(self.balance-amount,2)
-            return f'''Done! {amount}$ was withdrawn. The new account balance is {self.balance}$'''
-        
-        # The acount balance is less than minimum after operation
-        else:
-            return f'''Withdrawal is not executable! The account balance will be less than the minimum({BankAccount.minBalance}$) after this operation.'''
+        if self._check_auth_code(auth_code):
+            if self._check_balance(amount): # Check the account balance is enough
+                self.balance -= (amount + self.fee)
+                logging.log(logging.INFO, f"Withdrawal Done! The new account balance is {self.balance} IRR.")
+                return self.balance
+            
+            else: # The account balance is less than minimum
+                logging.log(logging.INFO, "Withdrawal can not be done due to not enough balance.")
+                raise ex.NotEnoughBalance("Withdrawal is not executable due to not enough balance.")
+        raise ex.AuthenticationCodeError("The authentication code is invalid!")
     
     
     
@@ -101,19 +111,3 @@ class BankAccount:
     #     else:
     #         return f'''Transfer is not executable! The account balance will be less than the minimum({BankAccount.minBalance}$) after this operation.'''
             
-
-# hamid = BankAccount('Hamid', 11.1)
-# saeed = BankAccount('Saeed', 100)
-
-# print(hamid)
-# print(hamid.withdrawal(5))
-# print(hamid.withdrawal(10))
-# print(hamid.deposite(15))
-# print(hamid.withdrawal(5))
-
-# print(saeed)
-# print(hamid.transfer(saeed,5))
-# print(saeed)
-# print(hamid)
-# majid = 'Majid'
-# print(hamid.transfer(majid,5))
