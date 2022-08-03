@@ -38,3 +38,15 @@ class TransferingError(Exception):
 
 class CardBalanceError(ValueError):
     pass
+
+class ChargeCardError(Exception):
+    pass
+
+class PayTicketError(Exception):
+    pass
+
+class LimitedCardExpired(Exception):
+    pass
+
+class LimitedNumbersError(ValueError):
+    pass
