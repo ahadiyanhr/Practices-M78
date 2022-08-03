@@ -35,3 +35,6 @@ class WithdrawError(Exception):
     pass
 class TransferingError(Exception):
     pass
+
+class CardBalanceError(ValueError):
+    pass

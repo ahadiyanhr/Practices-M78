@@ -1,6 +1,7 @@
 from User import User
-from Admin import Admin
+# from Admin import Admin
 from BankAccount import BankAccount
+from MetroCard import CreditCard
 
 #User:
     # create a user only by program interface???
@@ -13,10 +14,10 @@ from BankAccount import BankAccount
     # ... works as Authentication id to have a trip or use bank account
 
 test_admin = User("Saeed", "Rezaei", "0155554781", "myPass123", "09122224444")
-bank1 = BankAccount(test_admin, 1000000)
-# bank2 = BankAccount(test_admin, 1000000)
+# bank1 = CreditCard(test_admin, 1000000)
+card1 = CreditCard(test_admin, 1000000)
 
-print(BankAccount.owner_accounts)
+print(CreditCard.owner_cards)
 
 
 if __name__ == "__main1__":

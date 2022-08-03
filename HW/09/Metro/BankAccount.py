@@ -11,7 +11,7 @@ logging.basicConfig(filename= 'metro.log', filemode= 'a',\
 
 class BankAccount:
     
-    owner_accounts = {} # keys: owners, values: accounts of each owner
+    owner_accounts = {} # keys: owners, values: account of each owner
     minBalance = 500000 # minimum balance, IRR
     fee = 600 # IRR
     
@@ -45,8 +45,8 @@ class BankAccount:
     @balance.setter
     def balance(self, balance: int):
         if balance < self.minBalance:
-            logging.log(logging.ERROR, "Balance of account is less than 500000 IRR.")
-            raise ex.AccountBalanceError("Balance of account must be more than 500000 IRR.")    
+            logging.log(logging.ERROR, f"Balance of account is less than {self.minBalance} IRR.")
+            raise ex.AccountBalanceError(f"Balance of account must be more than {self.minBalance} IRR.")    
         self._balance = balance
     
    
