@@ -4,13 +4,13 @@ from User import User
 from Admin import Admin
 from BankAccount import BankAccount
 from MetroCard import CreditCard, LimitedCard, SingleCard
+import menu_func as func
 
-
+ 
 
     # create trip (origin, destination, Fare)
     # each trip can do by one until end
-
-
+    
     # 1. user register ==> pickle it, show Authentication id
     # 2. bank account management ==> with Authentication id
     # 3. record a trip to a dict (key: trip_number, value: info): get A_id, select MetroCard (ask about charge it?), Pay for ticket and record it
@@ -19,54 +19,70 @@ from MetroCard import CreditCard, LimitedCard, SingleCard
     #   edit a trip that has already been made 
 
 if __name__ == "__main__":
-    
+    os.system("cls")
     loop = True
     choice = ''
     print("\n-----------\nHi dear, Welcome to my Metro Program, :)")
     while loop:
-        choice = input('''\nPlease select your option:
-            Quit -> 0
-            User/Admin Register -> 1
-            Bank Account Management -> 2
-            Take a Trip -> 3
-            Trip Managment (by admin) -> 4
-            
-                Enter your choice >> ''')
+        choice = input(func.main_menu)
         
-        #----- User select "0" from Main Menu:
+        #----- User select "0.Quit" from Main Menu:
         if choice == '0':
             os.system("cls")
             print("Quit from Menu")
             break
         
-        #----- User select "1" from Main Menu:
+        #----- User select "1.Register" from Main Menu:
         elif choice == '1':
             os.system("cls")
             print("\n----> Register Menu <----")
             get_type = input('Enter Type of User (user/admin): ')
-            get_first_name = input('Enter first_name: ')
-            get_last_name = input('Enter last_name: ')
-            get_id_number = input('Enter id_number (must be 10 numbers): ')
-            get_password = input('Enter Password (must be more than 4 chars): ')
-            get_phone = input('Do you have Phone Number? y/N ')
-            
-            if get_phone in ['', 'n', 'N']:
-                phone_number = None
-            else:
-                phone_number = input('Enter Phone Number: ')
-            
+            if get_type.lower() not in ["user", "admin"]:
+                input('Input type is not valid.\npress enter to continue ')
+                continue
+            info = func.register()
             if get_type == 'user':
-                user = User(get_first_name, get_last_name, get_id_number, get_password, phone_number)
+                user = User(info[0], info[1], info[2], info[3], info[4])
+                account = BankAccount(user)
                 print(f"User Authentication Code is {user.auth_code}")
             else:
-                admin = Admin(get_first_name, get_last_name, get_id_number, get_password, phone_number)
+                admin = Admin(info[0], info[1], info[2], info[3], info[4])
+                account = BankAccount(admin)
                 print(f"Admin Authentication Code is {admin.auth_code}")
-            input('press enter to continue')
-            os.system("cls") 
+            input('press enter to continue ')
             continue
         
-        #----- User select "2" from Main Menu:    
+        #----- User select "2.AccountManage" from Main Menu:    
         elif choice == '2':
+            os.system("cls")
+            print("\n----> Account Management Menu <----")
+            get_authcode = input('Enter Your Authentication Code: ')
+            if func.search_auth_code(get_authcode):
+                account = func.search_auth_code(get_authcode)
+                os.system("cls")
+                print('Sign in succesed.')
+                acc_select = input(func.acc_manage)
+                if acc_select == '1':
+                    func.bank_account_manage(account, get_authcode)
+                    input('Done.\npress enter to continue ')
+                    continue 
+                elif acc_select == '2':
+                    card_select = input(func.card_func_selection)
+                    pass
+                else:
+                    input('Your choice is invalid.\npress enter to continue ')
+                    continue   
+            else:
+                input('Authentication Code is wrong.\npress enter to continue ')
+                os.system("cls")
+                continue
+            
+            
+            
+            
+            
+        #----- User select "200" from Main Menu:    
+        elif choice == '10':
             print("\n----> Log in Menu <----")
             get_username = input('Enter Your Username: ')
             get_password = input('Enter Your Password: ')

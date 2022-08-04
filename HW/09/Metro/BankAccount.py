@@ -100,7 +100,7 @@ class BankAccount:
     
     
     def transfer(self, account: "BankAccount", amount: int, auth_code: str) -> int | str:
-
+        # bayad account tabdil beshe be id_number
         if self._check_account(account) and self._check_auth_code(auth_code):
             if self._check_balance(amount): # Check the account balance is enough
                 account.balance += amount
