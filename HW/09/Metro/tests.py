@@ -4,6 +4,7 @@ import unittest
 
 from User import User
 from Admin import Admin
+from Trip import Trip
 from BankAccount import BankAccount
 from MetroCard import CreditCard, LimitedCard, SingleCard
 
@@ -269,21 +270,19 @@ class TestSingleCard(unittest.TestCase):
             test_account.pay_ticket('wrong_authcode')
 
 class TestTrip(unittest.TestCase):
-    pass
-
-    # create trip (origin, destination, Fare)
-    # each trip can do by one until end
-
-class TestMain(unittest.TestCase):
-    pass
-    # 1. user register ==> pickle it, show Authentication id
-    # 2. bank account management ==> with Authentication id
-    # 3. record a trip to a dict (key: trip_number, value: info): get A_id, select MetroCard (ask about charge it?), Pay for ticket and record it
-    # 4. Management: get Admin_id and password, go to admin control:
-    #   record a metro trip
-    #   edit a trip that has already been made 
     
-
+    def test_trip_instantiation(self):
+        # Check the new tripinstantiate correctly:
+        test_user = User("Hamid", "Rezaei", "5123111191", "myPass123", "09122224444")
+        test_trip = Trip('origin', 'dest', 1000)
+        self.assertEqual(test_trip.origin, 'origin')
+        self.assertEqual(test_trip.destination, 'dest')
+        self.assertEqual(test_trip.fare, 1000)
+        
+    def test_trip_record(self):
+        # Check the new tripinstantiate correctly:
+        test_user = User("Hamid", "Rezaei", "5123111190", "myPass123", "09122224444")
+        self.assertTrue(Trip.record_trip('origin', 'dest', 1000, test_user.auth_code))
 
 if __name__ == '__main__':
     unittest.main()
