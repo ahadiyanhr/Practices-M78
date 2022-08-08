@@ -3,7 +3,8 @@ import exceptions as ex
 from User import User
 from Admin import Admin
 from BankAccount import BankAccount
-from MetroCard import CreditCard, LimitedCard, SingleCard
+from MetroCard import CreditCard, LimitedCard, MetroCard, SingleCard
+from Trip import Trip
 import menu_func as func
 
  
@@ -11,7 +12,6 @@ import menu_func as func
     # create trip (origin, destination, Fare)
     # each trip can do by one until end
     
-    # 1. user register ==> pickle it, show Authentication id
     # 2. bank account management ==> with Authentication id
     # 3. record a trip to a dict (key: trip_number, value: info): get A_id, select MetroCard (ask about charge it?), Pay for ticket and record it
     # 4. Management: get Admin_id and password, go to admin control:
@@ -40,13 +40,21 @@ if __name__ == "__main__":
             if get_type.lower() not in ["user", "admin"]:
                 input('Input type is not valid.\npress enter to continue ')
                 continue
-            info = func.register()
+            fn = input('Enter first_name: ')
+            ln = input('Enter last_name: ')
+            id = input('Enter id_number (must be 10 numbers): ')
+            ps = input('Enter Password (must be more than 4 chars): ')
+            phi = input('Do you have Phone Number? y/N ')
+            if phi in ['', 'n', 'N']:
+                ph = None
+            else:
+                ph = input('Enter Phone Number: ')
             if get_type == 'user':
-                user = User(info[0], info[1], info[2], info[3], info[4])
+                user = User(fn, ln, id, ps, ph)
                 account = BankAccount(user)
                 print(f"User Authentication Code is {user.auth_code}")
             else:
-                admin = Admin(info[0], info[1], info[2], info[3], info[4])
+                admin = Admin(fn, ln, id, ps, ph)
                 account = BankAccount(admin)
                 print(f"Admin Authentication Code is {admin.auth_code}")
             input('press enter to continue ')
@@ -62,13 +70,20 @@ if __name__ == "__main__":
                 os.system("cls")
                 print('Sign in succesed.')
                 acc_select = input(func.acc_manage)
-                if acc_select == '1':
-                    func.bank_account_manage(account, get_authcode)
+                if acc_select == '1': # Select Bank Account Management
+                    os.system("cls")
+                    bnk_select = input(func.bank_acc_selection)
+                    func.bank_account_manage(bnk_select, account, get_authcode)
                     input('Done.\npress enter to continue ')
+                    os.system("cls")
                     continue 
-                elif acc_select == '2':
-                    card_select = input(func.card_func_selection)
-                    pass
+                elif acc_select == '2': # Select Metro Card Management
+                    os.system("cls")
+                    card_select = input(func.card_selection)
+                    os.system("cls")
+                    method_select = input(func.card_func_selection)
+                    func.metro_card_manage(card_select, method_select, account, get_authcode)
+                    continue
                 else:
                     input('Your choice is invalid.\npress enter to continue ')
                     continue   
@@ -76,70 +91,26 @@ if __name__ == "__main__":
                 input('Authentication Code is wrong.\npress enter to continue ')
                 os.system("cls")
                 continue
-            
-            
-            
-            
-            
-        #----- User select "200" from Main Menu:    
-        elif choice == '10':
-            print("\n----> Log in Menu <----")
-            get_username = input('Enter Your Username: ')
-            get_password = input('Enter Your Password: ')
-            
-            if isinstance(User.user_valid(get_username, get_password),str):
-                print(f"{get_username} signed in successfully!")
-                user_id = User.user_valid(get_username, get_password)
-                menuloop = True
-                
-                while menuloop:
-                    menu = input('''\nPlease select your option:
-        Print User Information -> 1
-        Modify your Information -> 2
-        Change your Password -> 3
-        Exit from User Menu -> 4
         
-            Enter your choice >> ''')
-
-                    #----- User select "1" from User Menu:
-                    if menu == '1':
-                        print(User.users[user_id])
-                    
-                    #----- User select "2" from User Menu:
-                    elif menu == '2':
-                        get_username = input('Enter Your Username: ')
-                        if User.user_valid(get_username, None):
-                            print(f"This username has been taken by others! Please take another one.")
-                        
-                        get_phone = input('Do you have Phone Number? y/N ')
-                        if get_phone in ['', 'n', 'N']:
-                            phone_number = None
-                        else:
-                            phone_number = input('Enter Your Phone Number: ')
-                        
-                        User.users[user_id].username = get_username
-                        User.users[user_id].phone_number = phone_number
-                        
-                    #----- User select "3" from User Menu:    
-                    elif menu == '3':
-                        old_pass = input("Enter your old Password: ")
-                        new_pass = input("Enter your new Password: ")
-                        repeat_new = input("Repeat your new Password: ")
-                        if (User.users[user_id].password == old_pass) and (User.pass_valid(new_pass, repeat_new)):
-                                User.users[user_id].password = new_pass
-                                print("Password Updated!\nPlese log in again with your new Password.")
-                                menuloop = False
-                        elif User.users[user_id].password == old_pass:
-                            print("New passwords are not match!")
-                        else:
-                            print("Password is wrong!")
-                            
-                    #----- User select "4" from User Menu:    
-                    elif menu == '4':
-                        menuloop = False
-                        
-            elif User.user_valid(get_username, get_password):
-                print("Password is wrong!")
-            else:
-                print("There is not any User!")
+        
+        #----- User select "0.Quit" from Main Menu:
+        if choice == '3':
+            os.system("cls")
+            print("Now you can take a Trip!")
+            origin = input('Enter origin: ')
+            destination = input('Enter destination: ')
+            fare = int(input("Enter trip's fare: "))
+            auth_code = input('Enter Authentication Code: ')
+            select = int(input("select card: 1.Credit, 2.Limited, 3.Single: "))
+            user = func.get_owner(auth_code)
+            for card in MetroCard.owner_cards[user]:
+                if card[1] == ["CreditCard","LimitedCard","SingleCard"][select-1]:
+                    card[0].pay_ticket(fare, auth_code)
+                    Trip.record_trip(origin, destination, fare, auth_code)
+                    input(f'Trip number {len(Trip._trip_records)} is done. press enter to continue.')
+            continue
+            
+            
+            
+        
     
