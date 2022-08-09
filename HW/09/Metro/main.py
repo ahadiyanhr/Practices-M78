@@ -5,7 +5,7 @@ from Admin import Admin
 from BankAccount import BankAccount
 from MetroCard import CreditCard, LimitedCard, MetroCard, SingleCard
 from Trip import Trip
-import menu_func as func
+import other_func as func
 
  
 
