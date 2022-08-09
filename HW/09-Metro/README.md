@@ -18,4 +18,4 @@ To sum up, this project has 9 different py files that are described below:
 9. `other_func.py`: other functions which are valuable for main menu well-running.
 
 Furthermore, you can see the ER Diagram of the metro project below:
-![alt text](https://github.com/ahadiyanhr/Practices-M78/blob/develop/HW/09/Metro/metro_by_drawSQL.png)
+![alt text](https://github.com/ahadiyanhr/Practices-M78/blob/main/HW/09-Metro/metro_by_drawSQL.png)
