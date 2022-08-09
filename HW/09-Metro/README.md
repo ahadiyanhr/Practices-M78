@@ -17,5 +17,10 @@ To sum up, this project has 9 different py files that are described below:
 8. `exceptions.py`: includes all exceptions and user-defined errors for this project;
 9. `other_func.py`: other functions which are valuable for main menu well-running.
 
-Furthermore, you can see the ER Diagram of the metro project below:
+Additionally, this project is associated with three more files that they are:
+1. `0-9.pdf`: Documents includes problems and project requirements;
+2. `metro_by_drawSQL.png`: Picture of ERD of the metro project which is provided by [drawSQL](https://drawsql.app);
+3. `README.md`: readme file that you are reading right now!!
+
+Finally, you can see the ER Diagram of the metro project below:
 ![alt text](https://github.com/ahadiyanhr/Practices-M78/blob/main/HW/09-Metro/metro_by_drawSQL.png)
