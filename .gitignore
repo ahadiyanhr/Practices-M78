@@ -1,4 +1,8 @@
 *.mp3
+*.pyc
+*.log
+*.pickle
+__pycache__
 *.log
 *.pickle
 *.pyc
