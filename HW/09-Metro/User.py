@@ -20,12 +20,13 @@ class User:
                 raise ex.InstantiateError("This user was already registered.")
         return super(User, cls).__new__(cls)
     
-    def __init__(self, first_name: str, last_name: str, id_number: str, password: str, phone_number: str = None):
+    def __init__(self, first_name: str, last_name: str, id_number: str, password: str, phone_number: str = None, is_admin: bool = False):
         self.first_name = first_name
         self.last_name = last_name
         self.id_number = id_number
         self.password = password
         self.phone_number = phone_number
+        self.is_admin = is_admin
         self.auth_code = str(uuid.uuid3(uuid.NAMESPACE_DNS, self.id_number)).split("-")[0] # make an Auth.Code
         User.users.append(self) # add to users list
         with open('users.pickle', 'wb') as up:
