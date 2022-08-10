@@ -2,8 +2,8 @@ import os
 import pickle
 import exceptions as ex 
 from User import User
-from Admin import Admin
 from BankAccount import BankAccount
+
 from MetroCard import CreditCard, LimitedCard, MetroCard, SingleCard
 
 
@@ -119,5 +119,7 @@ def unpickling():
             User.users = pickle.load(up)
         with open('cards.pickle', 'rb') as cp:
             MetroCard.owner_cards = pickle.load(cp)
+        with open('trips.pickle', 'rb') as tp:
+            Trip._trip_records = pickle.load(tp)
     except:
         pass

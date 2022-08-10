@@ -1,24 +1,14 @@
 import os
 import exceptions as ex 
 from User import User
-from Admin import Admin
 from BankAccount import BankAccount
 from MetroCard import MetroCard
 from Trip import Trip
 import other_func as func
 
  
-
-    # create trip (origin, destination, Fare)
-    # each trip can do by one until end
-    
-    # 2. bank account management ==> with Authentication id
-    # 3. record a trip to a dict (key: trip_number, value: info): get A_id, select MetroCard (ask about charge it?), Pay for ticket and record it
-    # 4. Management: get Admin_id and password, go to admin control:
-    #   record a metro trip
-    #   edit a trip that has already been made 
-
 if __name__ == "__main__":
+    func.unpickling()
     os.system("cls")
     loop = True
     choice = ''
@@ -54,7 +44,7 @@ if __name__ == "__main__":
                 account = BankAccount(user)
                 print(f"User Authentication Code is {user.auth_code}")
             else:
-                admin = Admin(fn, ln, id, ps, ph)
+                admin = User(fn, ln, id, ps, ph, True)
                 account = BankAccount(admin)
                 print(f"Admin Authentication Code is {admin.auth_code}")
             input('press enter to continue ')
@@ -93,7 +83,7 @@ if __name__ == "__main__":
                 continue
         
         
-        #----- User select "0.Quit" from Main Menu:
+        #----- User select "3.Take a Trip" from Main Menu:
         if choice == '3':
             os.system("cls")
             print("Now you can take a Trip!")
@@ -109,6 +99,45 @@ if __name__ == "__main__":
                     Trip.record_trip(origin, destination, fare, auth_code)
                     input(f'Trip number {len(Trip._trip_records)} is done. press enter to continue.')
             continue
+        
+        #----- User select "4.Trip Managment (by admin)" from Main Menu:
+        if choice == '4':
+            os.system("cls")
+            print("<<Trip Management Portal for ADMINS>>")
+            get_pass = input('Enter Admin Password: ')
+            get_authcode = input('Enter Admin Authentication Code: ')
+            if func.search_auth_code(get_authcode).is_admin:
+                if func.search_auth_code(get_authcode).password == get_pass:
+                    print('hello world')
+                # account = func.search_auth_code(get_authcode)
+                # os.system("cls")
+                # print('Sign in succesed.')
+                # acc_select = input(func.acc_manage)
+                # if acc_select == '1': # Select Bank Account Management
+                #     os.system("cls")
+                #     bnk_select = input(func.bank_acc_selection)
+                #     func.bank_account_manage(bnk_select, account, get_authcode)
+                #     input('Done.\npress enter to continue ')
+                #     os.system("cls")
+                #     continue 
+                # elif acc_select == '2': # Select Metro Card Management
+                #     os.system("cls")
+                #     card_select = input(func.card_selection)
+                #     os.system("cls")
+                #     method_select = input(func.card_func_selection)
+                #     func.metro_card_manage(card_select, method_select, account, get_authcode)
+                #     continue
+                # else:
+                #     input('Your choice is invalid.\npress enter to continue ')
+                #     continue   
+                else:
+                    input('Password is wrong.\npress enter to continue ')
+                    os.system("cls")
+                    continue
+            else:
+                input('Authentication Code is wrong.\npress enter to continue ')
+                os.system("cls")
+                continue
             
             
             

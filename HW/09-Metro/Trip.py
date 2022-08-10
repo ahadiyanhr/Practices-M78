@@ -1,5 +1,6 @@
 import logging
 from User import User
+import pickle
 from other_func import get_owner
 
 # Logging Setup:
@@ -21,4 +22,7 @@ class Trip:
         trip_number = len(Trip._trip_records)+1
         Trip._trip_records[trip_number] = (auth_code, Trip(origin, destination, fare))
         logging.log(logging.INFO, f"A Trip No.{trip_number} takes by user with Authentication Code of {auth_code}")
+        with open('trips.pickle', 'wb') as tp:
+            pickle.dump(Trip._trip_records, tp)
+        logging.log(logging.INFO, f"The trip number-{trip_number} pickled to trips.pickle file.")
         return True
