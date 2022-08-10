@@ -23,6 +23,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(test_user.id_number, "0123456799")
         self.assertEqual(test_user.password, "myPass123")
         self.assertEqual(test_user.phone_number, "09122224444")
+        self.assertEqual(test_user.is_admin, False)
     
     def test_user_id_number(self):
         # National ID Number must be 10 characters:
@@ -39,35 +40,35 @@ class TestUser(unittest.TestCase):
         self.assertRaises(ex.PhoneError, User, "Hamid", "Rezaei", "0123456581", "myPass123", "56122")
 
     
-class TestAdmin(unittest.TestCase):
+# class TestAdmin(unittest.TestCase):
     
-    def test_admin_creation(self):
-        # Admins with the same National ID Number of other users or admins must not created:
-        Admin("Saeed", "Rezaei", "0123456781", "myPass123", "09122224444")
-        self.assertRaises(ex.InstantiateError, Admin, "Hamid", "Rezaei", "0123456781", "myPass123")
+#     def test_admin_creation(self):
+#         # Admins with the same National ID Number of other users or admins must not created:
+#         Admin("Saeed", "Rezaei", "0123456781", "myPass123", "09122224444")
+#         self.assertRaises(ex.InstantiateError, Admin, "Hamid", "Rezaei", "0123456781", "myPass123")
     
-    def test_admin_instantiation(self):
-        # Check the new admin instantiate correctly:
-        test_admin = Admin("Saeed", "Rezaei", "0123654781", "myPass123", "09122224444")
-        self.assertEqual(test_admin.first_name, "Saeed")
-        self.assertEqual(test_admin.last_name, "Rezaei")
-        self.assertEqual(test_admin.id_number, "0123654781")
-        self.assertEqual(test_admin.password, "myPass123")
-        self.assertEqual(test_admin.phone_number, "09122224444")
+#     def test_admin_instantiation(self):
+#         # Check the new admin instantiate correctly:
+#         test_admin = Admin("Saeed", "Rezaei", "0123654781", "myPass123", "09122224444")
+#         self.assertEqual(test_admin.first_name, "Saeed")
+#         self.assertEqual(test_admin.last_name, "Rezaei")
+#         self.assertEqual(test_admin.id_number, "0123654781")
+#         self.assertEqual(test_admin.password, "myPass123")
+#         self.assertEqual(test_admin.phone_number, "09122224444")
     
-    def test_admin_id_number(self):
-        # National ID Number must be 10 characters:
-        self.assertRaises(ex.IDNumberError, Admin, "Saeed", "Rezaei", "0123256", "123")
+#     def test_admin_id_number(self):
+#         # National ID Number must be 10 characters:
+#         self.assertRaises(ex.IDNumberError, Admin, "Saeed", "Rezaei", "0123256", "123")
     
-    def test_admin_password(self):
-        # Password must be at least 4 characters:
-        self.assertRaises(ex.PasswordError, Admin, "Saeed", "Rezaei", "3213256781", "pas")
+#     def test_admin_password(self):
+#         # Password must be at least 4 characters:
+#         self.assertRaises(ex.PasswordError, Admin, "Saeed", "Rezaei", "3213256781", "pas")
     
-    def test_admin_phone_number(self):
-        # Phone number must start with "09":
-        self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122224444")
-        # Phone number must be 11 chars:
-        self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122")   
+#     def test_admin_phone_number(self):
+#         # Phone number must start with "09":
+#         self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122224444")
+#         # Phone number must be 11 chars:
+#         self.assertRaises(ex.PhoneError, Admin, "Saeed", "Rezaei", "0123456121", "myPass123", "56122")   
 
 class TestBankAccount(unittest.TestCase):
     
