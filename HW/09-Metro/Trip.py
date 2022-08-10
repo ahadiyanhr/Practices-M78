@@ -1,6 +1,6 @@
 import logging
 from User import User
-from menu_func import get_owner
+from other_func import get_owner
 
 # Logging Setup:
 log_format = "%(asctime)s %(name)s %(levelname)s: %(message)s"
