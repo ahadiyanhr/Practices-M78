@@ -1,4 +1,5 @@
 import os
+import pickle
 import exceptions as ex 
 from User import User
 from Admin import Admin
@@ -111,3 +112,12 @@ def metro_card_manage(card_select, method_select, account, auth_code):
     else:
         print("Your choice is not valid!")
     return True
+
+def unpickling():
+    try:
+        with open('users.pickle', 'rb') as up:
+            User.users = pickle.load(up)
+        with open('cards.pickle', 'rb') as cp:
+            MetroCard.owner_cards = pickle.load(cp)
+    except:
+        pass
