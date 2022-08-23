@@ -1,10 +1,23 @@
 import re
+import json
+
+class JsonUser:
+    
+     def __init__(self, name: str, email: str, phone: str):
+        self.name = name
+        self.email = email
+        self.phone = phone
+        User.USERS_INFO.append(self)
 
 class User:
+    
+    USERS_INFO = []
+    
     def __init__(self, name: str, email: str, phone: str):
         self.name = name
         self.email = email
         self.phone = phone
+        User.USERS_INFO.append(self)
 
     @property
     def name(self):
@@ -19,10 +32,10 @@ class User:
             
     @classmethod
     def name_validation(cls, name):
-        match_name = re.findall('[a-zA-Z_]',name)
-        if len(match_name) == len(name):
-            return True
-        return False
+        match_name = re.fullmatch(r'[a-zA-Z_]{4,14}',name)
+        if match_name is None:
+            return False
+        return True
     
     @property
     def email(self):
@@ -62,4 +75,21 @@ class User:
             return False
         return True
     
-user1 = User('hamid_', 'ads@fasdsdfsd.ci', '+989120720171')
+    @classmethod
+    def save_json(cls):
+        user_dict = {}
+        for user in User.USERS_INFO:
+            user_dict[str(user)] = {
+                'name': user.name,
+                'email': user.email,
+                'phone': user.phone
+            }
+        with open('users.json', 'w', encoding ='utf8') as json_file:
+            json.dump(user_dict, json_file, indent = 6)
+    
+    @classmethod
+    def load_json(cls):        
+        with open('users.json', 'r', encoding ='utf8') as json_file:
+            users_data = json.load(json_file)
+        for users in users_data:
+            JsonUser(users_data[users]['name'], users_data[users]['email'], users_data[users]['phone'])
