@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+    <head>
+        <title>Q2Flex</title>
+        <Style>
+            .flex-container {
+                display: flex;
+                background-color:rgb(199, 201, 202);
+                gap: 10px;
+                flex-direction: column; 
+            }
+            .header {
+                display: flex;
+                background-color:blue;
+                font-weight: bold;
+                color: white;
+                align-items: center;
+                justify-content: center;
+                height: 100px;
+            }
+            .title {
+                display: flex;
+                background-color: rgb(199, 201, 202);
+                gap: 10px;
+                font-weight: bold;
+                color: black;
+                height: 150px;
+            }
+            .texts {
+                display: flex;
+                background-color:white;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                width: 70%;
+            }
+            .tile {
+                display: flex;
+                background-color:rgb(199, 201, 202);
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+            }
+            .tile > * {
+                display: flex;
+                width: 25%;
+                height: 100px;
+            }
+            .orange {
+                color: orange;
+                background-color: orange;
+            }
+            .blue {
+                color: blue;
+                background-color:blue;
+            }
+            .green {
+                color: green;
+                background-color:green;
+            }
+            .red {
+                color: red;
+                background-color:red;
+            }
+
+
+        </Style>
+
+    </head>
+    <body>
+        <div class="flex-container">
+            <div class="header">Responsive Web</div>
+            <div class="title">
+                <div class="texts">title<br>Lorem ipsum dolor sit amet</div>
+                <div class="texts">title<br>Lorem ipsum dolor sit amet</div>
+                <div class="texts">title<br>Lorem ipsum dolor sit amet</div>
+            </div>
+            <div class="tile">
+                <div class="orange"></div>
+                <div class="blue"></div>
+                <div class="green"></div>
+                <div class="red"></div>
+            </div>
+          </div>
+    </body>
+
+</html>
