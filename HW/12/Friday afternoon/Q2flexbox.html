@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+    <head>
+        <title>Q2Flex</title>
+        <Style>
+            .flex-container {
+                display: flex;
+                background-color:blue;
+                font-weight: bold;
+                color: white;
+                flex-direction: column;
+                
+              }
+            .main-container {
+                display: flex;
+                font-weight: bold;
+                color: black;
+                height: 150px;
+            }
+            .main {
+                display: flex;
+                background-color:white;
+                align-items: center;
+                width: 70%;
+            }
+            .sidebar {
+                display: flex;
+                background-color:aqua;
+                width: 15%;
+                align-items: center;
+                justify-content: center;
+            }
+            .nav {
+                display: flex;
+                background-color:blueviolet;
+                width: 15%;
+                align-items: center;
+                justify-content: center;
+            }
+
+        </Style>
+
+    </head>
+    <body>
+        <div class="flex-container">
+            <div>Header</div>
+            <div class="main-container">
+                <div class="main">Main</div>
+                <div class="sidebar">Sidebar</div>
+                <div class="nav">Nav</div>
+            </div>
+            <div>Footer</div>
+          </div>
+    </body>
+
+</html>
