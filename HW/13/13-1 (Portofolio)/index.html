@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Webpage!</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+  #left-menu {
+    background-color: #462be2;
+    padding: 20px;
+  }
+  img.img-fluid {
+    width: 100%;
+    border-radius: 50%;
+  }
+  .author-fullname{
+    font-size: 200%;
+    margin-top: 10%;
+    margin-bottom: 2%;
+    color: white;
+    font-family: Impact;
+  }
+  .author-major{
+    font-size: 130%;
+    margin-top: 5%;
+    margin-bottom: 10%;
+    font-weight: bold;
+    color: white;
+    font-family: Arial;
+  }
+  .fa {
+    padding: 10px;
+    font-size: 150%;
+    margin-bottom: 5%;
+    width: 20%;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+  }
+  .fa:hover {
+    color: black;
+  }
+  a.menu-items{
+    font-size: 100%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  a.menu-items:hover {
+    color: black;
+  }
+
+  #right-menu {
+    padding: 5%;
+  }
+  div.head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  div.resume {
+    text-align: center;
+  }
+  img.resume {
+    width: 200px;
+  }
+  p.paraphs{
+    font-family: 'Times New Roman';
+  }
+  div.progress {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  p.progress-title{
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  progress.progbar {
+    height:10px;
+    margin-top: 10px;
+  }
+</style>
+<body>
+
+<div class="container-fluid">
+  <div class="container-fluid">
+    <div class="row">
+      <div id="left-menu" class="col-sm-4 col-md-4 col-lg-4 col-xl-3">
+        <img class="img-fluid" src="images/mypicture.jpg" alt="author-picture">
+        <p class="author-fullname">Hamid Reza Ahadiyan</p>
+        <p class="author-major">Backend Developer</p>
+        <a href="https://www.linkedin.com/in/iamizahad/" class="fa fa-linkedin"></a>
+        <a href="https://github.com/ahadiyanhr" class="fa fa-github"></a>
+        <a href="#" class="fa fa-twitter"></a>
+        <a href="" class="menu-items"><br>about me<br></a>
+        <a href="" class="menu-items">experience<br></a>
+        <a href="" class="menu-items">education<br></a>
+        <a href="" class="menu-items">works<br></a>
+        <a href="" class="menu-items">contact<br></a>
+        </div>
+      <div id="right-menu" class="col-sm-8 col-md-8 col-lg-8 col-xl-9">
+        <div class="head">
+          <div class="aboutme">
+              <h1 class="aboutme">about me</h1>
+          </div>
+          <div class="resume">
+              <a href="images/download-bottom .jpg" download>
+                  <img class="resume" src="images/download-bottom .jpg" alt="resume">
+              </a>
+          </div>
+        </div>
+        <div class="information">
+          <p class="paraphs"></p>
+          <p>Data Analyst with 10+ years of experience in project work and freelance jobs. Skilled in data modeling, machine learning, and problem-solving, as well as languages, including Python and MATLAB. Passionate about building models that fix problems. Relevant skills include machine learning, problem solving, and programming.</p>
+          <p><b>Birthday:</b> February 11, 1990</p>
+          <p><b>Location:</b> No. 500, Jeyhoon St., Imam Khomeini St.</p>
+          <p><b>Email:</b> ahadiyan@gmail.com</p>
+          <p><b>Phone:</b> 0912 000 1234</p>
+        </div>
+        <div class="progress">
+          <div class="progress-right">
+              <p class="progress-title">Django:</p>
+              <progress class="progbar" value="20" max="100" style="height:200px"> 32% </progress>
+          </div>
+          <div class="progress-left">
+              <p class="progress-title">Python:</p>
+              <progress class="progbar" value="80" max="100" style="height:200px"> 32% </progress>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+</body>
+</html>
