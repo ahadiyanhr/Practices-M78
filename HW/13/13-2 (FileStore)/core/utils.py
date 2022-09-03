@@ -37,5 +37,5 @@ class Logging:
             self._log_level = level
         logging.log(Logging.log_levels['error'], f"The Log_level of {level} is wrong.")
         
-    def LOG(self, log_level, log_message) -> None:
+    def LOG(log_level, log_message) -> None:
         logging.log(log_level, log_message)
