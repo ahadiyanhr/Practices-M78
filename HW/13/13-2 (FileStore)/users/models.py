@@ -7,7 +7,7 @@ class User(DBModel):  # User model
     TABLE = 'users'
     PK = 'id'
 
-    def __init__(self, first_name, last_name, phone, national_id, age: int, password, id: int=None) -> None:
+    def __init__(self, first_name, last_name, phone, national_id, age: int, password, id: int=None, is_seller: bool=False) -> None:
 
         self.first_name = first_name
         self.last_name = last_name
@@ -15,6 +15,7 @@ class User(DBModel):  # User model
         self.national_id = national_id
         self.age = age
         self.password = password
+        self.is_seller = is_seller
         if id: self.id = id
         
     @property
