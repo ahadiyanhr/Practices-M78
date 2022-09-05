@@ -1,5 +1,6 @@
 
 DB_CONNECTION = {
+    "DBname": "FileStore",
     "HOST": "localhost",
     "USER": "postgres",
     "PORT": 5432,
