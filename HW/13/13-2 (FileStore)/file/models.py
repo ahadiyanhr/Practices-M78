@@ -57,4 +57,5 @@ class File(DBModel):  # File model
         
     @classmethod
     def seller_id_validation(cls, seller_id):
+        '''not compeleted func. + unittest'''
         return NotImplemented
