@@ -93,12 +93,23 @@ def create_tables() -> None:
             conn.close()
             
 def generate_command(model_instance: DBModel) -> str:
+    values_args = {
+        "user": 7,
+        "file": 5
+    }
+    returning = ""
     if model_instance.id is None:
         id_sentence = ""
+        returning = "RETURNING "+model_instance.TABLE[:-1]+"_id"
     else:
         id_sentence = model_instance.TABLE[:-1]+"_id" # == user_id or file_id
-        
+        values_args[model_instance.TABLE[:-1]] += 1
+
     if isinstance(model_instance, User):
-        user_sentence = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller)"
+        command = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller) "   
     else:
-        file_sentence = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other)"
+        command = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
+    
+    command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
+    
+    return command
