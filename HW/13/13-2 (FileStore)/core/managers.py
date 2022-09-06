@@ -61,9 +61,6 @@ class DBManager:
             else:
                 return self.__get_cursor().execute(command, (model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other, model_instance.id))
-                
-        elif method in ("get", "delete"):
-            return self.__get_cursor().execute(command, (model_instance.id))
 
     def create(self, model_instance: DBModel) -> int:
         """
@@ -84,8 +81,11 @@ class DBManager:
         """
             returns an instance of the Model with inserted values
         """
+        command = "SELECT * FROM "+model_class.TABLE+" WHERE "+model_class.TABLE[:-1]+"_id = %s"
         try:
-            row = self.__get_execute(model_instance).fetchone()
+            self.__get_cursor().execute(command, (id))
+            data = self.__get_cursor().fetchone()
+            '''Here Here Here'''
             self.id = row[0] # get id of instance
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
