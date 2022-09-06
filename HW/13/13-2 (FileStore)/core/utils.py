@@ -114,9 +114,6 @@ def generate_command(model_instance: DBModel, method: str) -> str:
             command = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
         
         command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
-        
-    elif method.lower() == "get":
-        command = "SELECT * FROM "+model_instance.TABLE[:-1]+" WHERE "+id_sentence+" = %s"
     
     elif method.lower() == "update":
         command = "UPDATE "+model_instance.TABLE[:-1]
@@ -125,9 +122,6 @@ def generate_command(model_instance: DBModel, method: str) -> str:
         else:
             command += " SET file_name = %s, date_created = %s, date_modified = %s, seller_id = %s, other = %s"
         command += " WHERE "+id_sentence+" = %s"
-    
-    elif method.lower() == "delete":
-        command = "DELETE FROM "+model_instance.TABLE[:-1]+" WHERE "+id_sentence+ "= %s"
         
     return command
     
