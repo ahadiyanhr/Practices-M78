@@ -8,7 +8,7 @@ class File(DBModel):  # File model
     PK = 'id'
     FK = 'seller_id'
 
-    def __init__(self, file_name, date_created, date_modified, seller_id, other: str, id: int=None) -> None:
+    def __init__(self, file_name, date_created, date_modified, seller_id, other="", id: int=None) -> None:
 
         self.file_name = file_name
         self.date_created = date_created
