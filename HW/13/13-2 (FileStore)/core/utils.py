@@ -92,11 +92,12 @@ def create_tables() -> None:
         if conn is not None:
             conn.close()
             
-def generate_command(model_instance: DBModel) -> str:
+def generate_command(model_instance: DBModel, method: str) -> str:
+    
     values_args = {
-        "user": 7,
-        "file": 5
-    }
+            "user": 7,
+            "file": 5
+        }
     returning = ""
     if model_instance.id is None:
         id_sentence = ""
@@ -104,12 +105,29 @@ def generate_command(model_instance: DBModel) -> str:
     else:
         id_sentence = model_instance.TABLE[:-1]+"_id" # == user_id or file_id
         values_args[model_instance.TABLE[:-1]] += 1
+        
+    if method.lower() == "insert":
 
-    if isinstance(model_instance, User):
-        command = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller) "   
-    else:
-        command = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
+        if isinstance(model_instance, User):
+            command = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller) "   
+        else:
+            command = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
+        
+        command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
+        
+    elif method.lower() == "get":
+        command = "SELECT * FROM "+model_instance.TABLE[:-1]+" WHERE "+id_sentence+" = %s"
     
-    command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
+    elif method.lower() == "update":
+        command = "UPDATE "+model_instance.TABLE[:-1]
+        if isinstance(model_instance, User):
+            command += " SET first_name = %s,last_name = %s, phone = %s, national_code = %s, age = %s, password = %s, is_seller = %s"   
+        else:
+            command += " SET file_name = %s, date_created = %s, date_modified = %s, seller_id = %s, other = %s"
+        command += " WHERE "+id_sentence+" = %s"
     
+    elif method.lower() == "delete":
+        command = "DELETE FROM "+model_instance.TABLE[:-1]+" WHERE "+id_sentence+ "= %s"
+        
     return command
+    
