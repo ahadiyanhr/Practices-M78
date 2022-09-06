@@ -2,6 +2,9 @@ import psycopg2
 import psycopg2.extras
 from core.models import DBModel
 from users.models import User
+from file.models import File
+from core.utils import Logging
+from core.utils import generate_command
 from configs import DB_CONNECTION
 from psycopg2._psycopg import connection, cursor
 
@@ -28,38 +31,69 @@ class DBManager:
     def __get_cursor(self) -> cursor:
         # Changing the fetch output from Tuple to Dict utilizing RealDictCursor cursor factory
         return self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    
+    def __close_cursor(self) -> None:
+        return self.conn.cursor().close()
+    
+    def __get_execute(self, model_instance: DBModel, method: str) -> cursor:
+        command = generate_command(model_instance, method)
+        
+        if (method == "insert") and (model_instance.id is None):
+            if isinstance(model_instance, User):
+                return self.__get_cursor().execute(command, (model_instance.first_name, model_instance.last_name,\
+                    model_instance.phone, model_instance.national_code, model_instance.age, model_instance.password, model_instance.is_seller))
+            else:
+                return self.__get_cursor().execute(command, (model_instance.file_name, model_instance.date_created,\
+                    model_instance.date_modified, model_instance.seller_id, model_instance.other))
+        
+        elif method == "insert":
+            if isinstance(model_instance, User):
+                return self.__get_cursor().execute(command, (model_instance.id, model_instance.first_name, model_instance.last_name,\
+                    model_instance.phone, model_instance.national_code, model_instance.age, model_instance.password, model_instance.is_seller))
+            else:
+                return self.__get_cursor().execute(command, (model_instance.id, model_instance.file_name, model_instance.date_created,\
+                    model_instance.date_modified, model_instance.seller_id, model_instance.other))
+        
+        elif method == "update":
+            if isinstance(model_instance, User):
+                return self.__get_cursor().execute(command, (model_instance.first_name, model_instance.last_name, model_instance.phone,\
+                    model_instance.national_code, model_instance.age, model_instance.password, model_instance.is_seller, model_instance.id))
+            else:
+                return self.__get_cursor().execute(command, (model_instance.file_name, model_instance.date_created,\
+                    model_instance.date_modified, model_instance.seller_id, model_instance.other, model_instance.id))
+                
+        elif method in ("get", "delete"):
+            return self.__get_cursor().execute(command, (model_instance.id))
 
     def create(self, model_instance: DBModel) -> int:
         """
             return id of created model instance from table
         """
-        command_no_id = """
-            INSERT INTO User(first_name, last_name, phone, national_code, age, password, is_seller) 
-            VALUES(%s, %s, %s, %s , %s, %s, %s)
-            RETURNING user_id
-            """
-        command_with_id = """
-            INSERT INTO User(user_id, first_name, last_name, phone, national_code, age, password, is_seller) 
-            VALUES(%s, %s, %s, %s, %s , %s, %s, %s)
-            """
-        if model_instance.id is None:
-            self.__get_cursor().execute(command_no_id,\
-                (model_instance.first_name, model_instance.last_name, phone, national_code, age, password, is_seller))
-            row = cur.fetchone()
-            self.id = row[0]
-            cur.close()
-            # commit the changes
-            conn.commit()
+        try:
+            row = self.__get_execute(model_instance, "insert").fetchone()
+            self.id = row[0] # get id of instance
+            self.__close_cursor() # close cursor
+            self.conn.commit() # commit the changes
         except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
+            Logging.LOG('error', error)
         finally:
-            if conn is not None:
-                conn.close()
+            if self.conn is not None:
+                self.__del__()
 
-    def read(self, model_class: type, pk) -> DBModel:  # get
+    def read(self, model_class: type, id: int) -> DBModel:
         """
             returns an instance of the Model with inserted values
         """
+        try:
+            row = self.__get_execute(model_instance).fetchone()
+            self.id = row[0] # get id of instance
+            self.__close_cursor() # close cursor
+            self.conn.commit() # commit the changes
+        except (Exception, psycopg2.DatabaseError) as error:
+            Logging.LOG('error', error)
+        finally:
+            if self.conn is not None:
+                self.__del__()
 
     def update(self, model_instance: DBModel) -> None:
         """
