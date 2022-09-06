@@ -1,3 +1,6 @@
+from core.models import DBModel
+from users.models import User
+from file.models import File
 from configs import LOGGING_SETUP
 from os import name as os_name, system as terminal
 import logging
@@ -42,10 +45,10 @@ class Logging:
         logging.log(log_level, log_message)
 
         
-def create_tables():
+def create_tables() -> None:
     """ create tables in the PostgreSQL database"""
     commands = (
-        """ CREATE TABLE IF NOT EXISTS User (
+        """ CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
                 first_name VARCHAR(50) NOT NULL,
                 last_name VARCHAR(50) NOT NULL,
@@ -58,7 +61,7 @@ def create_tables():
         """,
         """
         other: str, id: int=None
-        CREATE TABLE IF NOT EXISTS Teacher (
+        CREATE TABLE IF NOT EXISTS files (
                 file_id SERIAL PRIMARY KEY,
                 file_name VARCHAR(255) NOT NULL,
                 date_created DATE NOT NULL,
@@ -78,15 +81,24 @@ def create_tables():
         PASSWORD = DB_CONNECTION["PASSWORD"]
         conn = psycopg2.connect(DBname, USER, HOST, PORT, PASSWORD)
         cur = conn.cursor()
-        # create table one by one
-        for command in commands:
+        for command in commands: # Create tables one by one
             cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
+        cur.close() # Close communication with the PostgreSQL database server
+        conn.commit() # Commit the changes
     except (Exception, psycopg2.DatabaseError) as error:
         Logging.LOG('error', error)
     finally:
+        logging.log('info', "users and files tables created in DB.")
         if conn is not None:
             conn.close()
+            
+def generate_command(model_instance: DBModel) -> str:
+    if model_instance.id is None:
+        id_sentence = ""
+    else:
+        id_sentence = model_instance.TABLE[:-1]+"_id" # == user_id or file_id
+        
+    if isinstance(model_instance, User):
+        user_sentence = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller)"
+    else:
+        file_sentence = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other)"
