@@ -19,7 +19,7 @@ class User(DBModel):  # User model
         self.age = age
         self.password = password
         self.is_seller = is_seller
-        if id: self.id = id
+        self.id = id
         
     @property
     def first_name(self):
@@ -113,10 +113,14 @@ class User(DBModel):  # User model
     
     @id.setter
     def id(self, id):
-        if User.age_validation(id):
-            self._id = id
+        if id is not None:
+            if User.id_validation(id):
+                self._id = id
+            else:
+                logger.error("user_id must be an integer more than 0. user_id set to None.")
+                self._id = None
         else:
-            logger.error("user_id must be an integer more than 0.")
+            self._id = None
         
     @classmethod
     def id_validation(cls, id):
