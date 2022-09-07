@@ -29,7 +29,7 @@ class DBManagerTest(unittest.TestCase):
         
         self.assertEqual(vars(u), vars(self.u1))
 
-    def test_upgrade_success(self):
+    def test_update_success(self):
         if not hasattr(self, 'u1'):
             self.test_create_success()
         new_first_name = 'Reza'
@@ -41,21 +41,22 @@ class DBManagerTest(unittest.TestCase):
         read_u = self.db_manager.read(User, self.u1.id)
         self.assertEqual(read_u.first_name, new_first_name)
 
-    # def test_delete_success(self):
-    #     if not hasattr(self, 'u1'):
-    #         self.test_create_success()
-    #     id = self.u1.id
+    def test_delete_success(self):
+        if not hasattr(self, 'u1'):
+            self.test_create_success()
+        id = self.u1.id
 
-    #     self.db_manager.delete(self.u1)
-    #     self.assertFalse(hasattr(self.u1, 'id'))
-    #     self.assertRaises(Exception, self.db_manager.read, User, id)
+        self.db_manager = DBManager()
+        self.db_manager.delete(self.u1)
+        
+        self.assertRaises(Exception, self.db_manager.read, User, id)
 
-    # def tearDown(self) -> None:
-    #     try:
-    #         self.db_manager.delete(self.u1)
-    #     except:
-    #         pass
-    #     del self.db_manager
+    def tearDown(self) -> None:
+        try:
+            self.db_manager.delete(self.u1)
+        except:
+            pass
+        del self.db_manager
     
 if __name__ == '__main__':
     unittest.main()
