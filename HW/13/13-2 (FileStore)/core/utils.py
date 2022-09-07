@@ -124,4 +124,12 @@ def generate_command(model_instance: DBModel, method: str) -> str:
         command += " WHERE "+id_sentence+" = %s"
         
     return command
-    
+
+def print_attrs(fetch_data: dict, attribute="all") -> (dict|str):
+    try:
+        if attribute.lower() == "all":
+            return fetch_data
+        else:
+            return fetch_data[attribute]
+    except Exception as error:
+            Logging.LOG('error', error)
