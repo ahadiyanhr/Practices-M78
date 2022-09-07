@@ -4,7 +4,7 @@ from core.models import DBModel
 from users.models import User
 from file.models import File
 from core.utils import Logging
-from core.utils import generate_command
+from core.utils import generate_command, print_attrs
 from configs import DB_CONNECTION
 from psycopg2._psycopg import connection, cursor
 
@@ -84,9 +84,9 @@ class DBManager:
         command = "SELECT * FROM "+model_class.TABLE+" WHERE "+model_class.TABLE[:-1]+"_id = %s"
         try:
             self.__get_cursor().execute(command, (id))
-            data = self.__get_cursor().fetchone()
-            '''Here Here Here'''
-            self.id = row[0] # get id of instance
+            data = self.__get_cursor().fetchall()
+            attribute = input("Enter the attribute (all | any): ")
+            print(print_attrs(data, attribute))
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
         except (Exception, psycopg2.DatabaseError) as error:
@@ -99,8 +99,27 @@ class DBManager:
         """
             update instance in db table by get all model_instance attrs
         """
+        try:
+            self.__get_execute(model_instance, "updata")
+            self.__close_cursor() # close cursor
+            self.conn.commit() # commit the changes
+        except (Exception, psycopg2.DatabaseError) as error:
+            Logging.LOG('error', error)
+        finally:
+            if self.conn is not None:
+                self.__del__()
 
-    def delete(self, model_instance: DBModel) -> None:
+    def delete(self, model_class: type, id: int) -> None:
         """
             delete instance method
         """
+        command = "DELETE FROM "+model_class.TABLE+" WHERE "+model_class.TABLE[:-1]+"_id = %s"
+        try:
+            self.__get_cursor().execute(command, (id))
+            self.__close_cursor() # close cursor
+            self.conn.commit() # commit the changes
+        except (Exception, psycopg2.DatabaseError) as error:
+            Logging.LOG('error', error)
+        finally:
+            if self.conn is not None:
+                self.__del__()
