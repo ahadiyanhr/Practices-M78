@@ -81,7 +81,7 @@ def generate_command(model_instance: DBModel, method: str) -> str:
         command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
     
     elif method.lower() == "update":
-        command = "UPDATE "+model_instance.TABLE[:-1]
+        command = "UPDATE "+model_instance.TABLE
         if isinstance(model_instance, User):
             command += " SET first_name = %s,last_name = %s, phone = %s, national_code = %s, age = %s, password = %s, is_seller = %s"   
         else:
