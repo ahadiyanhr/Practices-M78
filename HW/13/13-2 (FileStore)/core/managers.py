@@ -88,7 +88,7 @@ class DBManager:
                 self.__del__()
         return model_instance.id
 
-    def read(self, model_class: type, id: int) -> DBModel:
+    def read(self, model_class: DBModel, id: int) -> DBModel:
         """
             returns an instance of the Model with inserted values
         """
@@ -103,6 +103,7 @@ class DBManager:
             return u1
         except (Exception, psycopg2.DatabaseError) as error:
             logger.error(error)
+            raise(Exception)
         finally:
             if self.conn is not None:
                 self.__del__()
@@ -121,17 +122,18 @@ class DBManager:
             if self.conn is not None:
                 self.__del__()
 
-    def delete(self, model_class: type, id: int) -> None:
+    def delete(self, model_instance: DBModel) -> None:
         """
             delete instance method
         """
-        command = "DELETE FROM "+model_class.TABLE+" WHERE "+model_class.TABLE[:-1]+"_id = %s"
+        command = "DELETE FROM "+model_instance.TABLE+" WHERE "+model_instance.TABLE[:-1]+"_id = %s"
         try:
-            self.__get_cursor().execute(command, (id))
+            cur = self.__get_cursor()
+            cur.execute(command, (model_instance.id,))
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
         except (Exception, psycopg2.DatabaseError) as error:
-            Logging.LOG('error', error)
+            logger.error(error)
         finally:
             if self.conn is not None:
                 self.__del__()
