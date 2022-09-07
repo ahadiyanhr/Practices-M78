@@ -11,11 +11,11 @@ from users.models import User
 class DBManagerTest(unittest.TestCase):
 
     def setUp(self):
-        self.db_manager = DBManager(DB_CONNECTION["DBname"])
+        self.db_manager = DBManager()
         create_tables()
 
     def test_create_success(self):
-        u1 = User('Akbar', 'babaii', '09121231234', '0123456789', 20, "ThisIsPassword")
+        u1 = User('Akbar', 'babaii', '09121231234', '0123456789', 20, 'ThisIsPassword')
         res = self.db_manager.create(u1)
 
         self.assertIsInstance(res, int)
