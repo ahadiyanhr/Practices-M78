@@ -1,13 +1,17 @@
 import psycopg2
 import psycopg2.extras
+import logging.config, logging
 from core.models import DBModel
 from users.models import User
 from file.models import File
-from core.utils import Logging
 from core.utils import generate_command, print_attrs
 from configs import DB_CONNECTION
 from psycopg2._psycopg import connection, cursor
 
+
+# Define Logger:
+logging.config.fileConfig('.\\log_configs.ini', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 class DBManager:
     HOST = DB_CONNECTION["HOST"]
@@ -72,10 +76,11 @@ class DBManager:
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
         except (Exception, psycopg2.DatabaseError) as error:
-            Logging.LOG('error', error)
+            logger.error(error)
         finally:
             if self.conn is not None:
                 self.__del__()
+        return self.id
 
     def read(self, model_class: type, id: int) -> DBModel:
         """
