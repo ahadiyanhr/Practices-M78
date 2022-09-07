@@ -1,7 +1,10 @@
 from core.models import DBModel
-from core.utils import Logging
+import logging.config, logging
 import re
 
+# Define Logger:
+logging.config.fileConfig('.\\log_configs.ini', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 class User(DBModel):  # User model
     TABLE = 'users'
@@ -26,7 +29,8 @@ class User(DBModel):  # User model
     def first_name(self, first_name):
         if User.name_validation(first_name):
             self._first_name = first_name
-        Logging.LOG('error', "First Name is not valid.")
+        else:
+            logger.error("First Name is not valid.")
     
     @property
     def last_name(self):
@@ -36,7 +40,8 @@ class User(DBModel):  # User model
     def last_name(self, last_name):
         if User.name_validation(last_name):
             self._last_name = last_name
-        Logging.LOG('error', "Last Name is not valid.")
+        else:
+            logger.error("Last Name is not valid.")
             
     @classmethod
     def name_validation(cls, name):
@@ -53,7 +58,8 @@ class User(DBModel):  # User model
     def phone(self, phone):
         if User.phone_validation(phone):
             self._phone = phone
-        Logging.LOG('error', "Phone Number is not valid.")
+        else:
+            logger.error("Phone Number is not valid.")
         
     @classmethod
     def phone_validation(cls, phone):
@@ -71,7 +77,8 @@ class User(DBModel):  # User model
     def national_id(self, national_id):
         if User.national_id_validation(national_id):
             self._national_id = national_id
-        Logging.LOG('error', "National ID is not valid.")
+        else:
+            logger.error("National ID is not valid.")
         
     @classmethod
     def national_id_validation(cls, national_id):
@@ -89,12 +96,13 @@ class User(DBModel):  # User model
     def age(self, age):
         if User.age_validation(age):
             self._age = age
-        Logging.LOG('error', "Age must be an integer between 01-99.")
+        else:
+            logger.error("Age must be an integer between 01-99.")
         
     @classmethod
     def age_validation(cls, age):
-        pattern = r'([1-9]{1})|(\A0+[1-9]{1})|(\A[1-9]{1}+[0-9]{1})'
-        match_age = re.fullmatch(pattern, age)
+        pattern = '^0*(?:[1-9][0-9]?|100)$'
+        match_age = re.fullmatch(pattern, str(age))
         if match_age is None:
             return False
         return True
@@ -107,7 +115,8 @@ class User(DBModel):  # User model
     def id(self, id):
         if User.age_validation(id):
             self._id = id
-        Logging.LOG('error', "user_id must be an integer more than 0.")
+        else:
+            logger.error("user_id must be an integer more than 0.")
         
     @classmethod
     def id_validation(cls, id):
