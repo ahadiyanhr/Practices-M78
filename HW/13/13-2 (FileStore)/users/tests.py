@@ -15,18 +15,19 @@ class DBManagerTest(unittest.TestCase):
         create_tables()
 
     def test_create_success(self):
-        u1 = User('Akbar', 'babaii', '09121231234', '0123456789', 20, 'ThisIsPassword')
-        res = self.db_manager.create(u1)
-
+        self.u1 = User('Akbar', 'babaii', '09121231234', '0123456789', 20, 'ThisIsPassword')
+        res = self.db_manager.create(self.u1)
+        
         self.assertIsInstance(res, int)
-        self.assertEqual(u1.id, res)
+        self.assertEqual(self.u1.id, res)
 
-    # def test_read_success(self):
-    #     if not hasattr(self, 'u1'):
-    #         self.test_create_success()
-    #     u = self.db_manager.read(User, self.u1.id)
-
-    #     self.assertEqual(vars(u), vars(self.u1))
+    def test_read_success(self):
+        if not hasattr(self, 'u1'):
+            self.test_create_success()
+            self.db_manager = DBManager()
+        u = self.db_manager.read(User, self.u1.id)
+        
+        self.assertEqual(vars(u), vars(self.u1))
 
     # def test_upgrade_success(self):
     #     if not hasattr(self, 'u1'):
