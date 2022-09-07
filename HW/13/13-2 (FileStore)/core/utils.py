@@ -64,7 +64,7 @@ def generate_command(model_instance: DBModel, method: str) -> str:
             "file": 5
         }
     returning = ""
-    if model_instance.id is None:
+    if not isinstance(model_instance.id, int):
         id_sentence = ""
         returning = "RETURNING "+model_instance.TABLE[:-1]+"_id"
     else:
@@ -74,9 +74,9 @@ def generate_command(model_instance: DBModel, method: str) -> str:
     if method.lower() == "insert":
 
         if isinstance(model_instance, User):
-            command = "users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller) "   
+            command = "INSERT INTO users("+id_sentence+"first_name, last_name, phone, national_code, age, password, is_seller) "   
         else:
-            command = "files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
+            command = "INSERT INTO files("+id_sentence+"file_name, date_created, date_modified, seller_id, other) "
         
         command += "VALUES( %s"+(", %s")*(values_args[model_instance.TABLE[:-1]]-1)+") "+returning
     
