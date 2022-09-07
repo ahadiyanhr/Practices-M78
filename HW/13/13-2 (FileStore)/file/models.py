@@ -1,4 +1,6 @@
 from core.models import DBModel
+from core.managers import DBManager
+from users.models import User
 import logging.config, logging
 import re
 
@@ -63,5 +65,8 @@ class File(DBModel):  # File model
         
     @classmethod
     def seller_id_validation(cls, seller_id):
-        '''not compeleted func. + unittest'''
-        return NotImplemented
+        db_manager = DBManager()
+        u1 = db_manager.read(User, seller_id)
+        if u1.is_seller:
+            return True
+        return False
