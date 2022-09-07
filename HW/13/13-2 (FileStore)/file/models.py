@@ -1,7 +1,10 @@
 from core.models import DBModel
-from core.utils import Logging
+import logging.config, logging
 import re
 
+# Define Logger:
+logging.config.fileConfig('.\\log_configs.ini', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 class File(DBModel):  # File model
     TABLE = 'files'
@@ -25,7 +28,8 @@ class File(DBModel):  # File model
     def date_created(self, date_created):
         if File.date_validation(date_created):
             self._date_created = date_created
-        Logging.LOG('error', "Date Created is not valid.")
+        else:
+            logger.error("Date Created is not valid.")
         
     @property
     def date_modified(self):
@@ -35,7 +39,8 @@ class File(DBModel):  # File model
     def date_modified(self, date_modified):
         if File.date_validation(date_modified):
             self._date_modified = date_modified
-        Logging.LOG('error', "Date Modified is not valid.")
+        else:
+            logger.error("Date Modified is not valid.")
         
     @classmethod
     def date_validation(cls, date):
@@ -53,7 +58,8 @@ class File(DBModel):  # File model
     def seller_id(self, seller_id):
         if File.seller_id_validation(seller_id):
             self._seller_id = seller_id
-        Logging.LOG('error', f"There is no seller with id of {seller_id}.")
+        else:
+            logger.error(f"There is no seller with id of {seller_id}.")
         
     @classmethod
     def seller_id_validation(cls, seller_id):
