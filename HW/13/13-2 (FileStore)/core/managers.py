@@ -52,16 +52,19 @@ class DBManager:
                         model_instance.password, model_instance.is_seller))
                 return cur.fetchone()
             else:
-                return self.__get_cursor().execute(command, (model_instance.file_name, model_instance.date_created,\
+                cur.execute(command, (model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other))
+                return cur.fetchone()
         
         elif method == "insert":
             if isinstance(model_instance, User):
-                return self.__get_cursor().execute(command, (model_instance.id, model_instance.first_name, model_instance.last_name,\
+                cur.execute(command, (model_instance.id, model_instance.first_name, model_instance.last_name,\
                     model_instance.phone, model_instance.national_id, model_instance.age, model_instance.password, model_instance.is_seller))
+                return cur.fetchone()
             else:
-                return self.__get_cursor().execute(command, (model_instance.id, model_instance.file_name, model_instance.date_created,\
+                cur.execute(command, (model_instance.id, model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other))
+                return cur.fetchone()
         
         elif method == "update":
             if isinstance(model_instance, User):
@@ -93,14 +96,15 @@ class DBManager:
         """
         command = "SELECT * FROM "+model_class.TABLE+" WHERE "+model_class.TABLE[:-1]+"_id = %s"
         try:
-            self.__get_cursor().execute(command, (id))
-            data = self.__get_cursor().fetchall()
-            attribute = input("Enter the attribute (all | any): ")
-            print(print_attrs(data, attribute))
+            cur = self.__get_cursor()
+            cur.execute(command, (id,))
+            data = cur.fetchall()
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
+            u1 = User(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][6], data[0][7], data[0][0])
+            return u1
         except (Exception, psycopg2.DatabaseError) as error:
-            Logging.LOG('error', error)
+            logger.error(error)
         finally:
             if self.conn is not None:
                 self.__del__()
