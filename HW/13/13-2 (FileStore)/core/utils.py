@@ -1,49 +1,17 @@
 from core.models import DBModel
 from users.models import User
 from file.models import File
-from configs import LOGGING_SETUP
 from os import name as os_name, system as terminal
-import logging
+import logging.config, logging
 import psycopg2
 from configs import DB_CONNECTION
 
+# Define Logger:
+logging.config.fileConfig('.\\log_configs.ini', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
+
 def clear():
     terminal('cls' if os_name.lower() == 'nt' else 'clear')
-
-
-class Logging:
-    log_format = LOGGING_SETUP["log_format"]
-    filename = LOGGING_SETUP["filename"]
-    filemode = LOGGING_SETUP["filemode"]
-    level = LOGGING_SETUP["level"]
-    
-    log_levels = {
-        'debug': logging.DEBUG,
-        'info': logging.INFO,
-        'warning': logging.WARNING,
-        'error': logging.ERROR,
-        'critical': logging.CRITICAL
-    }
-    
-    logging.basicConfig(filename, filemode, level, log_format)
-    
-    def __init__(self, log_level="Debug", log_message="defualt message"):
-        self.log_level = log_level
-        self.log_message = log_message
-        
-    @property
-    def log_level(self):
-        return self._log_level
-    
-    @log_level.setter
-    def log_level(self, level: str):
-        if level.lower() in Logging.log_levels:
-            self._log_level = level
-        logging.log(Logging.log_levels['error'], f"The Log_level of {level} is wrong.")
-        
-    def LOG(log_level, log_message) -> None:
-        logging.log(log_level, log_message)
-
         
 def create_tables() -> None:
     """ create tables in the PostgreSQL database"""
@@ -60,7 +28,6 @@ def create_tables() -> None:
                 )
         """,
         """
-        other: str, id: int=None
         CREATE TABLE IF NOT EXISTS files (
                 file_id SERIAL PRIMARY KEY,
                 file_name VARCHAR(255) NOT NULL,
@@ -68,27 +35,25 @@ def create_tables() -> None:
                 date_modified DATE NOT NULL,
                 seller_id INTEGER NOT NULL,
                 FOREIGN KEY (seller_id)
-                    REFERENCES User (user_id)
+                    REFERENCES users (user_id)
                     ON UPDATE CASCADE ON DELETE CASCADE,
-                other VARCHAR(255),
+                other VARCHAR(255)
         )
         """)
     try:
         DBname = DB_CONNECTION["DBname"]
-        HOST = DB_CONNECTION["HOST"]
         USER = DB_CONNECTION["USER"]
-        PORT = DB_CONNECTION["PORT"]
         PASSWORD = DB_CONNECTION["PASSWORD"]
-        conn = psycopg2.connect(DBname, USER, HOST, PORT, PASSWORD)
+        conn = psycopg2.connect(dbname=DBname, user=USER, password=PASSWORD)
         cur = conn.cursor()
         for command in commands: # Create tables one by one
             cur.execute(command)
         cur.close() # Close communication with the PostgreSQL database server
         conn.commit() # Commit the changes
     except (Exception, psycopg2.DatabaseError) as error:
-        Logging.LOG('error', error)
+        logger.error(error)
     finally:
-        logging.log('info', "users and files tables created in DB.")
+        logger.info("users and files tables created in DB.")
         if conn is not None:
             conn.close()
             
@@ -132,4 +97,4 @@ def print_attrs(fetch_data: dict, attribute="all") -> (dict|str):
         else:
             return fetch_data[attribute]
     except Exception as error:
-            Logging.LOG('error', error)
+            logger.error(error)
