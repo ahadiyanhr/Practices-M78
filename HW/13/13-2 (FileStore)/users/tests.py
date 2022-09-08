@@ -4,7 +4,6 @@ sys.path.append('.\\')
 
 from core.managers import DBManager
 from core.utils import create_tables
-from configs import DB_CONNECTION
 from users.models import User
 
 
