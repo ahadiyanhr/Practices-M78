@@ -30,34 +30,34 @@ class DBManagerTest(unittest.TestCase):
         
         self.assertEqual(vars(f), vars(self.f1))
 
-    # def test_update_success(self):
-    #     if not hasattr(self, 'f1'):
-    #         self.test_create_success()
-    #     new_first_name = 'Reza'
-    #     self.f1.first_name = new_first_name
-    #     self.db_manager = DBManager()
-    #     self.db_manager.update(self.u1)
+    def test_update_success(self):
+        if not hasattr(self, 'f1'):
+            self.test_create_success()
+        new_file_name = 'myBooks'
+        self.f1.file_name = new_file_name
+        self.db_manager = mng.DBManager()
+        self.db_manager.update(self.f1)
 
-    #     self.db_manager = DBManager()
-    #     read_u = self.db_manager.read(User, self.u1.id)
-    #     self.assertEqual(read_u.first_name, new_first_name)
+        self.db_manager = mng.DBManager()
+        read_u = self.db_manager.read(flmdl.File, self.f1.id)
+        self.assertEqual(read_u.file_name, new_file_name)
 
-    # def test_delete_success(self):
-    #     if not hasattr(self, 'u1'):
-    #         self.test_create_success()
-    #     id = self.u1.id
+    def test_delete_success(self):
+        if not hasattr(self, 'f1'):
+            self.test_create_success()
+        id = self.f1.id
 
-    #     self.db_manager = DBManager()
-    #     self.db_manager.delete(self.u1)
+        self.db_manager = mng.DBManager()
+        self.db_manager.delete(self.f1)
         
-    #     self.assertRaises(Exception, self.db_manager.read, User, id)
+        self.assertRaises(Exception, self.db_manager.read, flmdl.File, id)
 
-    # def tearDown(self) -> None:
-    #     try:
-    #         self.db_manager.delete(self.f1)
-    #     except:
-    #         pass
-    #     del self.db_manager
+    def tearDown(self) -> None:
+        try:
+            self.db_manager.delete(self.f1)
+        except:
+            pass
+        del self.db_manager
     
 if __name__ == '__main__':
     unittest.main()
