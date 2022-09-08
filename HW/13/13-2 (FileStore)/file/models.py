@@ -1,6 +1,6 @@
 from core.models import DBModel
-from core.managers import DBManager
-from users.models import User
+import core.managers as mng
+from users import models as usmdl
 import logging.config, logging
 import re
 
@@ -20,7 +20,7 @@ class File(DBModel):  # File model
         self.date_modified = date_modified
         self.seller_id = seller_id
         self.other = other
-        if id: self.id = id
+        self.id = id
     
     @property
     def date_created(self):
@@ -29,7 +29,7 @@ class File(DBModel):  # File model
     @date_created.setter
     def date_created(self, date_created):
         if File.date_validation(date_created):
-            self._date_created = date_created
+            self._date_created = str(date_created)
         else:
             logger.error("Date Created is not valid.")
         
@@ -40,14 +40,14 @@ class File(DBModel):  # File model
     @date_modified.setter
     def date_modified(self, date_modified):
         if File.date_validation(date_modified):
-            self._date_modified = date_modified
+            self._date_modified = str(date_modified)
         else:
             logger.error("Date Modified is not valid.")
         
     @classmethod
     def date_validation(cls, date):
         pattern = r'^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])'
-        match_date = re.fullmatch(pattern, date)
+        match_date = re.fullmatch(pattern, str(date))
         if match_date is None:
             return False
         return True
@@ -65,8 +65,29 @@ class File(DBModel):  # File model
         
     @classmethod
     def seller_id_validation(cls, seller_id):
-        db_manager = DBManager()
-        u1 = db_manager.read(User, seller_id)
+        db_manager = mng.DBManager()
+        u1 = db_manager.read(usmdl.User, seller_id)
         if u1.is_seller:
             return True
         return False
+    
+    @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, id):
+        if id is not None:
+            if usmdl.User.id_validation(id):
+                self._id = id
+            else:
+                logger.error("file_id must be an integer more than 0. user_id set to None.")
+                self._id = None
+        else:
+            self._id = None
+        
+    @classmethod
+    def id_validation(cls, id):
+        if id <= 0:
+            return False
+        return True
