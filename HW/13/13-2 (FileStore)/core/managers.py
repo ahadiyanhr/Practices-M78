@@ -50,27 +50,33 @@ class DBManager:
                 cur.execute(command, (model_instance.first_name, model_instance.last_name,\
                     model_instance.phone, model_instance.national_id, model_instance.age,\
                         model_instance.password, model_instance.is_seller))
+                logger.info(f"User instance with name of {model_instance.first_name} inserted into {usmdl.User.TABLE} table.")
             else:
                 cur.execute(command, (model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other))
+                logger.info(f"File instance with name of {model_instance.file_name} inserted into {flmdl.File.TABLE} table.")
             return cur.fetchone()
         
         elif method == "insert":
             if isinstance(model_instance, usmdl.User):
                 cur.execute(command, (model_instance.id, model_instance.first_name, model_instance.last_name,\
                     model_instance.phone, model_instance.national_id, model_instance.age, model_instance.password, model_instance.is_seller))
+                logger.info(f"User instance with id of {model_instance.id} inserted into {usmdl.User.TABLE} table.")
             else:
                 cur.execute(command, (model_instance.id, model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other))
+                logger.info(f"File instance with id of {model_instance.id} inserted into {flmdl.File.TABLE} table.")
             return cur.fetchone()
         
         elif method == "update":
             if isinstance(model_instance, usmdl.User):
                 cur.execute(command, (model_instance.first_name, model_instance.last_name, model_instance.phone,\
                     model_instance.national_id, model_instance.age, model_instance.password, model_instance.is_seller, model_instance.id))
+                logger.info(f"User instance with id of {model_instance.id} updated in {usmdl.User.TABLE} table.")
             else:
                 cur.execute(command, (model_instance.file_name, model_instance.date_created,\
                     model_instance.date_modified, model_instance.seller_id, model_instance.other, model_instance.id))
+                logger.info(f"File instance with id of {model_instance.id} updated in {flmdl.File.TABLE} table.")
 
     def create(self, model_instance: DBModel) -> int:
         """
@@ -101,8 +107,10 @@ class DBManager:
             self.conn.commit() # commit the changes
             if model_class.TABLE == "users":
                 instance = usmdl.User(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][6], data[0][7], data[0][0])
+                logger.info(f"User instance with id of {data[0][0]} get from {model_class.TABLE} table.")
             else:
                 instance = flmdl.File(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][0])
+                logger.info(f"User instance with id of {data[0][0]} get from {model_class.TABLE} table.")
             return instance
         except (Exception, psycopg2.DatabaseError) as error:
             logger.error(error)
@@ -133,6 +141,7 @@ class DBManager:
         try:
             cur = self.__get_cursor()
             cur.execute(command, (model_instance.id,))
+            logger.info(f"{model_instance.TABLE[:-1]} instance with id of {model_instance.id} remove from {model_instance.TABLE} table.")
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
         except (Exception, psycopg2.DatabaseError) as error:
