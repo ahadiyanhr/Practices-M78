@@ -1,6 +1,5 @@
 from core.models import DBModel
 from users.models import User
-from file.models import File
 from os import name as os_name, system as terminal
 import logging.config, logging
 import psycopg2
