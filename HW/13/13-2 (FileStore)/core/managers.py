@@ -2,9 +2,9 @@ import psycopg2
 import psycopg2.extras
 import logging.config, logging
 from core.models import DBModel
-from users.models import User
-from file.models import File
-from core.utils import generate_command, print_attrs
+from users import models as usmdl
+from file import models as flmdl
+from core.utils import generate_command
 from configs import DB_CONNECTION
 from psycopg2._psycopg import connection, cursor
 
@@ -46,7 +46,7 @@ class DBManager:
         cur = self.__get_cursor()
 
         if (method == "insert") and (model_instance.id is None):
-            if isinstance(model_instance, User):
+            if isinstance(model_instance, usmdl.User):
                 cur.execute(command, (model_instance.first_name, model_instance.last_name,\
                     model_instance.phone, model_instance.national_id, model_instance.age,\
                         model_instance.password, model_instance.is_seller))
@@ -56,7 +56,7 @@ class DBManager:
             return cur.fetchone()
         
         elif method == "insert":
-            if isinstance(model_instance, User):
+            if isinstance(model_instance, usmdl.User):
                 cur.execute(command, (model_instance.id, model_instance.first_name, model_instance.last_name,\
                     model_instance.phone, model_instance.national_id, model_instance.age, model_instance.password, model_instance.is_seller))
             else:
@@ -65,7 +65,7 @@ class DBManager:
             return cur.fetchone()
         
         elif method == "update":
-            if isinstance(model_instance, User):
+            if isinstance(model_instance, usmdl.User):
                 cur.execute(command, (model_instance.first_name, model_instance.last_name, model_instance.phone,\
                     model_instance.national_id, model_instance.age, model_instance.password, model_instance.is_seller, model_instance.id))
             else:
@@ -88,7 +88,7 @@ class DBManager:
                 self.__del__()
         return model_instance.id
 
-    def read(self, model_class: DBModel, id: int) -> DBModel:
+    def read(self, model_class: type, id: int) -> DBModel:
         """
             returns an instance of the Model with inserted values
         """
@@ -99,8 +99,11 @@ class DBManager:
             data = cur.fetchall()
             self.__close_cursor() # close cursor
             self.conn.commit() # commit the changes
-            u1 = User(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][6], data[0][7], data[0][0])
-            return u1
+            if model_class.TABLE == "users":
+                instance = usmdl.User(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][6], data[0][7], data[0][0])
+            else:
+                instance = flmdl.File(data[0][1], data[0][2], data[0][3], data[0][4], data[0][5], data[0][0])
+            return instance
         except (Exception, psycopg2.DatabaseError) as error:
             logger.error(error)
             raise(Exception)
