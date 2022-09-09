@@ -47,12 +47,16 @@ class Route:
             for child in children:
                 child: Route
                 print(f"{children.index(child) + 1}. {child.name}")
+            print(f"\n{len(children)+1}. Exit Menu")
 
+            
             index = int(input("\n>> ")) - 1
             # ...
-
-            children[index]: Route
-            children[index].run()
+            if index == (len(children)):
+                Config.parent.run()
+            else:
+                children[index]: Route
+                children[index].run()
 
         else:
             # ...
@@ -75,6 +79,7 @@ class Router:
 
     def generate(self) -> None:
         clear()
+        print(self.name)
         Config.parent = self.route
         self.route.run()
         # ...
