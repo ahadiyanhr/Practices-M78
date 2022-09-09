@@ -108,6 +108,20 @@ class User(DBModel):  # User model
         return True
     
     @property
+    def is_seller(self):
+        return self._is_seller
+    
+    @is_seller.setter
+    def is_seller(self, is_seller):
+        if (is_seller in (True, 1)) or (str(is_seller).lower() == "yes"):
+            self._is_seller = True
+        elif (is_seller in (False, 0)) or (str(is_seller).lower() == "no"):
+            self._is_seller = False
+        else:
+            logger.error("is_seller is not valid (bool/yes/no).")
+            self._is_seller = None
+    
+    @property
     def id(self):
         return self._id
     
