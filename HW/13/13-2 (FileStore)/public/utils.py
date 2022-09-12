@@ -70,5 +70,6 @@ def delete_from_table(model_class: str):
         instance = db_manager.read(usmdl.User, id)
     else:
         instance = db_manager.read(flmdl.File, id)
+    db_manager = mng.DBManager()
     db_manager.delete(instance)
     print(f"The instance is deleted from {model_class} table. the information was:\n {vars(instance)}")
