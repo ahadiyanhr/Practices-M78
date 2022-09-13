@@ -1,0 +1,13 @@
+<html>
+<head>
+    <title>
+        Store Report
+    </title>
+</head>
+<body>
+    {{first}} to {{second}}
+    {% for image in images %}
+    <img src="{{url_for('images', filename=images)}}" alt="{{images}}">
+    {% endfor %}
+</body>
+</html>
